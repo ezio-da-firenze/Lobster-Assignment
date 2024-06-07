@@ -3,8 +3,18 @@ const bcrypt = require("bcrypt");
 
 exports.registerUser = async (req, res) => {
     try {
-        const { username, password, name, email, college, course } = req.body;
-
+        const {
+            username,
+            password,
+            name,
+            email,
+            college,
+            course,
+            role,
+            department,
+            yearOfStudy,
+        } = req.body;
+        console.log(role);
         // validate input
         if (!username || !password || !name || !email || !college || !course) {
             return res.status(400).json({
@@ -32,6 +42,9 @@ exports.registerUser = async (req, res) => {
             email,
             college,
             course,
+            role,
+            department,
+            yearOfStudy,
         });
 
         res.status(200).json({
