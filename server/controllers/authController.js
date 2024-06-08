@@ -1,7 +1,6 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const createToken = require("../utils/createToken");
-const { Op } = require("sequelize");
 
 const registerUser = async (req, res) => {
     try {
@@ -103,14 +102,14 @@ const loginUser = async (req, res) => {
         };
         let jwtToken;
         try {
-            jwtToken = createToken(tokenData);
+            jwtToken = await createToken(tokenData);
         } catch (error) {
             return res.status(500).json({
                 message: "Token creation failed",
                 error: error.message,
             });
         }
-
+        console.log(jwtToken);
         res.cookie("token", jwtToken, {
             httpOnly: true,
             secure: true,

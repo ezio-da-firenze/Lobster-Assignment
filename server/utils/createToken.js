@@ -1,11 +1,11 @@
 const jwt = require("jsonwebtoken");
-
+require("dotenv").config();
 const { JWT_SECRET, JWT_EXPIRY } = process.env;
 
 const createToken = async (
     tokenData,
-    tokenKey = "fbui34bfune9ruf",
-    expiresIn = "1d"
+    tokenKey = JWT_SECRET,
+    expiresIn = JWT_EXPIRY
 ) => {
     try {
         const token = await jwt.sign(tokenData, tokenKey, {

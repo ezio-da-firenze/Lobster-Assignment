@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const eveneController = require("../controllers/eventController");
+const eventController = require("../controllers/eventController");
+const { authorizeUser, authorizeAdmin } = require("../middlewares/auth");
 
-router.post("/add", eveneController.addEvent);
+router.post("/add", authorizeAdmin, eventController.addEvent);
+router.get("/all", eventController.allEvents);
 
 module.exports = router;
