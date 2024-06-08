@@ -18,7 +18,6 @@ const registerUser = async (req, res) => {
         } = req.body;
 
         // validate input
-
         if (!username || !password || !name || !email || !college || !course) {
             return res.status(400).json({
                 message: "Please provide all details",
