@@ -1,21 +1,25 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
+const createToken = require("../utils/createToken");
+const { Op } = require("sequelize");
 
-exports.registerUser = async (req, res) => {
+const registerUser = async (req, res) => {
     try {
         const {
             username,
             password,
             name,
             email,
+            contact,
             college,
             course,
             role,
             department,
             yearOfStudy,
         } = req.body;
-        console.log(role);
+
         // validate input
+
         if (!username || !password || !name || !email || !college || !course) {
             return res.status(400).json({
                 message: "Please provide all details",
@@ -40,6 +44,7 @@ exports.registerUser = async (req, res) => {
             password: hashedPassword,
             name,
             email,
+            contact,
             college,
             course,
             role,
@@ -61,7 +66,7 @@ exports.registerUser = async (req, res) => {
     }
 };
 
-exports.loginUser = async (req, res) => {
+const loginUser = async (req, res) => {
     try {
         const { username, email, password } = req.body;
         let user;
@@ -70,9 +75,11 @@ exports.loginUser = async (req, res) => {
                 message: "Please provide either username or email",
             });
         }
-        user =
-            (await User.findOne({ where: { username } })) ||
-            (await User.findOne({ where: { email } }));
+        if (!username) {
+            user = await User.findOne({ where: { email } });
+        } else {
+            user = await User.findOne({ where: { username } });
+        }
 
         if (!user) {
             return res.status(400).json({
@@ -88,19 +95,40 @@ exports.loginUser = async (req, res) => {
             });
         }
 
-        res.json({
+        const tokenData = {
+            id: user.id,
+            username: user.username,
+            name: user.name,
+            email: user.email,
+        };
+        let jwtToken;
+        try {
+            jwtToken = createToken(tokenData);
+        } catch (error) {
+            return res.status(500).json({
+                message: "Token creation failed",
+                error: error.message,
+            });
+        }
+
+        res.cookie("token", jwtToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "None",
+            maxAge: 60 * 60 * 1000,
+        });
+
+        res.status(200).json({
             message: "Login successful",
-            user: {
-                id: user.id,
-                username: user.username,
-                name: user.name,
-                email: user.email,
-            },
+            user: tokenData,
         });
     } catch (error) {
+        console.log(error);
         res.status(500).json({
             message: "Login failed",
             error: error.message,
         });
     }
 };
+
+module.exports = { registerUser, loginUser };
