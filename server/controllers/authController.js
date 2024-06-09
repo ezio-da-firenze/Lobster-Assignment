@@ -66,18 +66,14 @@ const registerUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
     try {
-        const { username, email, password } = req.body;
-        let user;
-        if (!username && !email) {
+        const { email, password } = req.body;
+        console.log("Hi");
+        if (!email || !password) {
             return res.status(400).json({
-                message: "Please provide either username or email",
+                message: "Please enter all details",
             });
         }
-        if (!username) {
-            user = await User.findOne({ where: { email } });
-        } else {
-            user = await User.findOne({ where: { username } });
-        }
+        const user = await User.findOne({ where: { email } });
 
         if (!user) {
             return res.status(400).json({

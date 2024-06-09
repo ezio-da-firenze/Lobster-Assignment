@@ -6,31 +6,31 @@ const { JWT_SECRET, JWT_EXPIRY, ADMIN_EMAIL } = process.env;
 const authorizeUser = async (req, res, next) => {
     const token = req.cookies.token;
     console.log(token);
+    // console.log(JWT_SECRET);
     if (token) {
         try {
-            console.log(JWT_SECRET);
             const decoded = jwt.verify(token, JWT_SECRET);
 
-            console.log(decoded);
+            // console.log(decoded);
 
             req.user = await User.findOne({
                 where: { username: decoded.username },
             });
 
             if (req.user) {
-                console.log("Valid USER");
+                // console.log("Valid USER");
                 next();
             } else {
-                console.log("Not Valid USER");
+                // console.log("Not Valid USER");
                 res.status(401).json({ message: "Token Error" });
             }
         } catch (error) {
-            console.log(error);
-            console.log("Not authorized Token failed");
+            // console.log(error);
+            // console.log("Not authorized Token failed");
             res.status(401).json({ message: "Token Error" });
         }
     } else {
-        console.log("Token Undefined");
+        // console.log("Token Undefined");
         res.status(401).json({ message: "Token Error" });
     }
 };

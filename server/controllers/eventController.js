@@ -15,6 +15,7 @@ const addEvent = async (req, res) => {
             description,
             time,
             category,
+            college: user.college,
             createdBy: user.username,
         });
 
@@ -40,4 +41,20 @@ const allEvents = async (req, res) => {
     }
 };
 
-module.exports = { addEvent, allEvents };
+const getEventById = async (req, res) => {
+    const eventId = req.params.id;
+    try {
+        const event = await Event.findByPk(eventId);
+        if (!event) {
+            return res.status(404).json({ message: "Event not found" });
+        }
+        res.status(200).json(event);
+    } catch (error) {
+        res.status(500).json({
+            message: "Failed to fetch event",
+            error: error.message,
+        });
+    }
+};
+
+module.exports = { addEvent, allEvents, getEventById };

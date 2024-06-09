@@ -15,6 +15,10 @@ const Event = sequelize.define("Event", {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    college: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
     location: DataTypes.STRING,
     description: DataTypes.TEXT,
     time: {
@@ -24,6 +28,11 @@ const Event = sequelize.define("Event", {
     category: {
         type: DataTypes.STRING,
         allowNull: false,
+    },
+    registrations: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
     },
 });
 
