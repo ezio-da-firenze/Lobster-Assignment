@@ -7,9 +7,11 @@ import {
   Input,
   VStack,
   HStack,
+  Text,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { useToast } from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
 
 const Register = () => {
   const toast = useToast();
@@ -172,7 +174,19 @@ const Register = () => {
             />
           </FormControl>
         </HStack>
-        {/* Register button */}
+        <Text>
+          Already have an account?{' '}
+          <Link
+            to="/login"
+            style={{
+              fontWeight: 'bold',
+              color: '#3182ce',
+              textDecoration: 'underline',
+            }}
+          >
+            Login
+          </Link>
+        </Text>
         <Button colorScheme="blue" onClick={handleSubmit}>
           Register
         </Button>

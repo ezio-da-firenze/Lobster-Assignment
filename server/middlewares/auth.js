@@ -6,6 +6,7 @@ const { JWT_SECRET, JWT_EXPIRY, ADMIN_EMAIL } = process.env;
 const authorizeUser = async (req, res, next) => {
     const token = req.cookies.token;
     console.log(token);
+    console.log("JWT_SECRET:", JWT_SECRET);
     // console.log(JWT_SECRET);
     if (token) {
         try {

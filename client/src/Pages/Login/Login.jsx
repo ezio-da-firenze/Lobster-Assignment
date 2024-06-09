@@ -6,8 +6,11 @@ import {
   FormLabel,
   Input,
   VStack,
+  Text,
+  color,
 } from '@chakra-ui/react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import { useToast } from '@chakra-ui/react';
 
 const Login = () => {
@@ -82,6 +85,20 @@ const Login = () => {
         <Button colorScheme="blue" onClick={handleSubmit}>
           Login
         </Button>
+        {/* Additional line with Link to registration page */}
+        <Text>
+          Don't have an account?{' '}
+          <Link
+            to="/register"
+            style={{
+              fontWeight: 'bold',
+              color: '#3182ce',
+              textDecoration: 'underline',
+            }}
+          >
+            Register
+          </Link>
+        </Text>
       </VStack>
     </Box>
   );

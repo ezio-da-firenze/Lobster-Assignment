@@ -18,7 +18,7 @@ const Events = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:3000/api/v1/events/all')
+      .get('http://localhost:3000/api/v1/events/all', { withCredentials: true })
       .then(response => {
         setEvents(response.data);
         setLoading(false);
