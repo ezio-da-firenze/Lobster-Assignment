@@ -15,7 +15,6 @@ const registerUser = async (req, res) => {
             contact,
             college,
             course,
-            role,
             department,
             yearOfStudy,
         } = req.body;
@@ -26,7 +25,10 @@ const registerUser = async (req, res) => {
                 message: "Please provide all details",
             });
         }
-
+        let role;
+        if (email === ADMIN_EMAIL) {
+            role = "admin";
+        }
         // check for existing username or email
         const existingUser =
             (await User.findOne({ where: { username } })) ||
@@ -39,11 +41,11 @@ const registerUser = async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
+
         let userRole;
-        const rolls = "admin";
-        if (email === ADMIN_EMAIL) {
-            userRole = "admin";
-        }
+        // if (email === ADMIN_EMAIL) {
+        //     userRole = "admin";
+        // }
         const user = await User.create({
             username,
             password: hashedPassword,
