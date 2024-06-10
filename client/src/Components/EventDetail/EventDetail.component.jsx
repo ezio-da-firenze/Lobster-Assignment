@@ -9,6 +9,7 @@ import {
   Image,
   Container,
   Button,
+  useToast,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import eventImage from '../../assets/hall.jpg';
@@ -17,6 +18,8 @@ const EventDetail = () => {
   const { id } = useParams();
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [registered, setRegistered] = useState(false);
+  const toast = useToast();
 
   useEffect(() => {
     axios
@@ -29,7 +32,48 @@ const EventDetail = () => {
         console.error('Error fetching event detail:', error);
         setLoading(false);
       });
-  }, [id]);
+  }, [id, registered]);
+
+  const handleRegister = async () => {
+    try {
+      const response = await axios.post(
+        'http://localhost:3000/api/v1/user/registerevent',
+        { eventId: id },
+        { withCredentials: true } // Ensure credentials are sent with the request
+      );
+      setRegistered(true);
+      toast({
+        title: 'Registration successful',
+        description: 'You have successfully registered for the event.',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        variant: 'subtle',
+      });
+    } catch (error) {
+      if (error.response.status == 409) {
+        // console.error('Error registering for eventsdnfjdshjkfsdhfsdl:', error);
+        toast({
+          title: 'Already registered',
+          description: 'You are already registered for the event.',
+          status: 'info',
+          duration: 3000,
+          isClosable: true,
+          variant: 'subtle',
+        });
+      } else {
+        toast({
+          title: 'Registration failed',
+          description:
+            'Failed to register for the event. Please try again later.',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+          variant: 'subtle',
+        });
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -109,11 +153,9 @@ const EventDetail = () => {
             <strong>Registrations:</strong> {registrations}
           </Text>
         </Stack>
-        <Link>
-          <Button colorScheme="blue" mt={4}>
-            Register
-          </Button>
-        </Link>
+        <Button colorScheme="blue" mt={4} onClick={handleRegister}>
+          Register
+        </Button>
       </Box>
     </Container>
   );

@@ -1,9 +1,11 @@
-// index.js
 const express = require("express");
 const bodyParser = require("body-parser");
 const authRoutes = require("./routes/authRoutes");
 const eventRoutes = require("./routes/eventRoutes");
+const userRoutes = require("./routes/userRoutes");
 const sequelize = require("./db");
+const { User, Event, Registration } = require("./models/associations");
+
 const cors = require("cors");
 require("dotenv").config();
 const cookieParser = require("cookie-parser");
@@ -21,14 +23,15 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/events", eventRoutes);
+app.use("/api/v1/user", userRoutes);
 
 sequelize
-    .sync()
+    .sync({ alter: true })
     .then(() => {
         app.listen(PORT, () => {
-            console.log(`Server running on port ${PORT}`);
+            console.log(`Server is running on port ${PORT}`);
         });
     })
-    .catch((error) => {
-        console.error("Error while connecting to database:", error);
+    .catch((err) => {
+        console.error("Error creating database & tables:", err);
     });

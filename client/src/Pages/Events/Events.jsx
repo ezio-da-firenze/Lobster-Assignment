@@ -42,70 +42,78 @@ const Events = () => {
       <Heading as="h1" size="xl" mb={5}>
         Current Events
       </Heading>
-      <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={5}>
-        {events.map(event => {
-          const eventDate = new Date(event.time);
-          const formattedDate = new Date(eventDate).toLocaleDateString();
-          const formattedTime = new Date(eventDate).toLocaleTimeString(
-            'en-US',
-            {
-              timeZone: 'UTC',
-              hour: 'numeric',
-              minute: '2-digit',
-            }
-          );
+      {events.length === 0 ? (
+        <Center>
+          <Text fontSize="2xl" color="gray.500">
+            No current events
+          </Text>
+        </Center>
+      ) : (
+        <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={5}>
+          {events.map(event => {
+            const eventDate = new Date(event.time);
+            const formattedDate = new Date(eventDate).toLocaleDateString();
+            const formattedTime = new Date(eventDate).toLocaleTimeString(
+              'en-US',
+              {
+                timeZone: 'UTC',
+                hour: 'numeric',
+                minute: '2-digit',
+              }
+            );
 
-          return (
-            <Link to={`/events/${event.id}`} key={event.id}>
-              <Box
-                p={5}
-                shadow="md"
-                borderWidth="1px"
-                borderRadius="md"
-                transition="0.3s"
-                _hover={{
-                  shadow: 'lg',
-                  transform: 'translateY(-5px)',
-                  background: 'gray.100',
-                }}
-              >
+            return (
+              <Link to={`/events/${event.id}`} key={event.id}>
                 <Box
-                  boxSize="150px"
-                  bg="gray.200"
+                  p={5}
+                  shadow="md"
+                  borderWidth="1px"
                   borderRadius="md"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  mb={4}
+                  transition="0.3s"
+                  _hover={{
+                    shadow: 'lg',
+                    transform: 'translateY(-5px)',
+                    background: 'gray.100',
+                  }}
                 >
-                  <Text fontSize="3xl" fontWeight="bold" color="gray.600">
-                    {event.name.charAt(0)}
-                  </Text>
+                  <Box
+                    boxSize="150px"
+                    bg="gray.200"
+                    borderRadius="md"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    mb={4}
+                  >
+                    <Text fontSize="3xl" fontWeight="bold" color="gray.600">
+                      {event.name.charAt(0)}
+                    </Text>
+                  </Box>
+                  <Stack>
+                    <Heading fontSize="xl">{event.name}</Heading>
+                    <Text mt={2}>{event.description}</Text>
+                    <Text mt={2} color="gray.500">
+                      Location: {event.location}
+                    </Text>
+                    <Text mt={2} color="gray.500">
+                      Category: {event.category}
+                    </Text>
+                    <Text mt={2} color="gray.500">
+                      Date: {formattedDate}
+                    </Text>
+                    <Text mt={2} color="gray.500">
+                      Time: {formattedTime}
+                    </Text>
+                    <Text mt={2} color="gray.500">
+                      College: {event.college}
+                    </Text>
+                  </Stack>
                 </Box>
-                <Stack>
-                  <Heading fontSize="xl">{event.name}</Heading>
-                  <Text mt={2}>{event.description}</Text>
-                  <Text mt={2} color="gray.500">
-                    Location: {event.location}
-                  </Text>
-                  <Text mt={2} color="gray.500">
-                    Category: {event.category}
-                  </Text>
-                  <Text mt={2} color="gray.500">
-                    Date: {formattedDate}
-                  </Text>
-                  <Text mt={2} color="gray.500">
-                    Time: {formattedTime}
-                  </Text>
-                  <Text mt={2} color="gray.500">
-                    College: {event.college}
-                  </Text>
-                </Stack>
-              </Box>
-            </Link>
-          );
-        })}
-      </SimpleGrid>
+              </Link>
+            );
+          })}
+        </SimpleGrid>
+      )}
     </Container>
   );
 };

@@ -11,6 +11,7 @@ import {
   Image,
   Box,
 } from '@chakra-ui/react';
+import { ColorModeSwitcher } from '../../ColorModeSwitcher';
 import { RiMenu5Fill } from 'react-icons/ri';
 import { IoMdClose } from 'react-icons/io';
 import React from 'react';
@@ -21,21 +22,24 @@ const Header = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <Box>
+    <Box borderBottom="1px solid #E2E8F0">
       <HStack justifyContent="space-between" align="center" px={8} py={4}>
         <Link to="/">
           <Image src={lobsterIcon} boxSize="30px" />
         </Link>
-        <Button
-          onClick={onOpen}
-          borderRadius="full"
-          colorScheme="blue"
-          w="25"
-          h="12"
-          _hover={{ bg: 'blue.200', color: 'blue.800' }}
-        >
-          <RiMenu5Fill />
-        </Button>
+        <HStack>
+          <ColorModeSwitcher />
+          <Button
+            onClick={onOpen}
+            borderRadius="full"
+            colorScheme="blue"
+            w="25"
+            h="12"
+            _hover={{ bg: 'blue.200', color: 'blue.800' }}
+          >
+            <RiMenu5Fill />
+          </Button>
+        </HStack>
         <Drawer placement="right" onClose={onClose} isOpen={isOpen}>
           <DrawerOverlay backdropFilter="blur(5px)" />
           <DrawerContent>

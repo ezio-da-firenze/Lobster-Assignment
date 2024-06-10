@@ -1,5 +1,5 @@
-const { Sequelize, DataTypes } = require("sequelize");
-const sequelize = new Sequelize("mysql://root:PASS@localhost:3307/newDB");
+const { DataTypes } = require("sequelize");
+const sequelize = require("../db");
 
 const Event = sequelize.define("Event", {
     id: {

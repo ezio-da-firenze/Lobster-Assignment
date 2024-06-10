@@ -15,18 +15,6 @@ const Registration = sequelize.define("Registration", {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    createdAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
-    },
-    updatedAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: sequelize.literal(
-            "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
-        ),
-    },
 });
 
 module.exports = Registration;

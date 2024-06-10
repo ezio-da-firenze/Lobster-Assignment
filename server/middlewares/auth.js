@@ -2,18 +2,22 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const User = require("../models/User");
 const { JWT_SECRET, JWT_EXPIRY, ADMIN_EMAIL } = process.env;
-
 const authorizeUser = async (req, res, next) => {
     const token = req.cookies.token;
+    console.log(
+        "x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-"
+    );
     console.log(token);
     console.log("JWT_SECRET:", JWT_SECRET);
-    // console.log(JWT_SECRET);
+    console.log(JWT_SECRET);
+    console.log(
+        "x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-"
+    );
     if (token) {
         try {
             const decoded = jwt.verify(token, JWT_SECRET);
 
             // console.log(decoded);
-
             req.user = await User.findOne({
                 where: { username: decoded.username },
             });
