@@ -1,11 +1,10 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useCallback } from 'react';
 import { UserContext } from '../../Context/UserContext';
 import { Box, Text, VStack, Container, Avatar, HStack } from '@chakra-ui/react';
 
 const Profile = () => {
-  const { user, fetchUser } = useContext(UserContext);
-
-  useEffect(() => {
+  const { user, userEvents, fetchUser } = useContext(UserContext);
+  const fetchUserMemo = useCallback(() => {
     fetchUser();
   }, [fetchUser]);
 
@@ -25,6 +24,7 @@ const Profile = () => {
             <Text color="gray.500">
               {user ? user.username : 'No username available'}
             </Text>
+            <Text color="gray.500">{user ? user.role : ''}</Text>
           </VStack>
         </HStack>
         <VStack align="start" spacing={3} mt={4}>

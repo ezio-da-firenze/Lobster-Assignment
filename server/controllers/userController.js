@@ -68,7 +68,10 @@ const getUserProfile = async (req, res) => {
         const registeredEvents = registrations.map(
             (registration) => registration.eventId
         );
-
+        const userData = {
+            user,
+            registeredEvents,
+        };
         res.status(200).json({
             user,
             registeredEvents,

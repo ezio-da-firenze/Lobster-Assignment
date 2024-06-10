@@ -1,3 +1,4 @@
+import React, { useContext } from 'react';
 import {
   Button,
   Drawer,
@@ -14,12 +15,22 @@ import {
 import { ColorModeSwitcher } from '../../ColorModeSwitcher';
 import { RiMenu5Fill } from 'react-icons/ri';
 import { IoMdClose } from 'react-icons/io';
-import React from 'react';
-import lobsterIcon from '../../assets/lobster-icon.svg';
 import { Link } from 'react-router-dom';
+import { UserContext } from '../../Context/UserContext';
+import lobsterIcon from '../../assets/lobster-icon.svg';
 
 const Header = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { user, isAdmin, logout } = useContext(UserContext);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      onClose();
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
 
   return (
     <Box borderBottom="1px solid #E2E8F0">
@@ -60,24 +71,51 @@ const Header = () => {
                     Events
                   </Button>
                 </Link>
-                <Link to="/register" onClick={onClose}>
-                  <Button
-                    variant="solid"
-                    colorScheme="blue"
-                    _hover={{ bg: 'blue.200', color: 'blue.800' }}
-                  >
-                    Sign Up
-                  </Button>
-                </Link>
-                <Link to="/login" onClick={onClose}>
-                  <Button
-                    variant="outline"
-                    colorScheme="blue"
-                    _hover={{ bg: 'blue.200', color: 'blue.800' }}
-                  >
-                    Log In
-                  </Button>
-                </Link>
+                {user ? (
+                  <>
+                    <Link to="/profile" onClick={onClose}>
+                      <Button variant="ghost" colorScheme="blue">
+                        Profile
+                      </Button>
+                    </Link>
+                    {user.role === 'admin' && ( // Render "Add Events" button if user is an admin
+                      <Link to="/addevent" onClick={onClose}>
+                        <Button variant="ghost" colorScheme="blue">
+                          Add Event
+                        </Button>
+                      </Link>
+                    )}
+                    <Button
+                      onClick={handleLogout}
+                      variant="solid"
+                      colorScheme="blue"
+                      _hover={{ bg: 'blue.200', color: 'blue.800' }}
+                    >
+                      Logout
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/register" onClick={onClose}>
+                      <Button
+                        variant="solid"
+                        colorScheme="blue"
+                        _hover={{ bg: 'blue.200', color: 'blue.800' }}
+                      >
+                        Sign Up
+                      </Button>
+                    </Link>
+                    <Link to="/login" onClick={onClose}>
+                      <Button
+                        variant="outline"
+                        colorScheme="blue"
+                        _hover={{ bg: 'blue.200', color: 'blue.800' }}
+                      >
+                        Log In
+                      </Button>
+                    </Link>
+                  </>
+                )}
               </VStack>
             </DrawerBody>
           </DrawerContent>

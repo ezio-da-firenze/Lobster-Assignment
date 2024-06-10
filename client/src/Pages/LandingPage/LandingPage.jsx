@@ -1,3 +1,4 @@
+import React, { useContext } from 'react';
 import {
   Box,
   Button,
@@ -10,10 +11,13 @@ import {
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion'; // Import Framer Motion
+import { UserContext } from '../../Context/UserContext';
 
 import lobster from '../../assets/lobster-home.png';
 
 const LandingPage = () => {
+  const { user } = useContext(UserContext);
+
   return (
     <div className="home">
       <Stack
@@ -30,16 +34,29 @@ const LandingPage = () => {
           <Heading>Welcome to Lobbie</Heading>
           <Text>Manage your events with ease</Text>
           <HStack>
-            <Link to="/register">
-              <Button
-                bg="white"
-                variant="outline"
-                color="black"
-                _hover={{ bg: 'black', color: 'white' }}
-              >
-                Sign Up
-              </Button>
-            </Link>
+            {!user ? (
+              <Link to="/register">
+                <Button
+                  bg="white"
+                  variant="outline"
+                  color="black"
+                  _hover={{ bg: 'black', color: 'white' }}
+                >
+                  Sign Up
+                </Button>
+              </Link>
+            ) : (
+              <Link to="/events">
+                <Button
+                  bg="white"
+                  variant="outline"
+                  color="black"
+                  _hover={{ bg: 'black', color: 'white' }}
+                >
+                  Go to Events
+                </Button>
+              </Link>
+            )}
             <Link to="/events">
               <Button
                 bg="black"

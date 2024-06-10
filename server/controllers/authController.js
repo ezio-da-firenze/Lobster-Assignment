@@ -1,9 +1,12 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
+require("dotenv").config();
 const createToken = require("../utils/createToken");
+const { JWT_SECRET, JWT_EXPIRY, ADMIN_EMAIL } = process.env;
 
 const registerUser = async (req, res) => {
     try {
+        console.log(ADMIN_EMAIL);
         const {
             username,
             password,
@@ -30,13 +33,17 @@ const registerUser = async (req, res) => {
             (await User.findOne({ where: { email } }));
 
         if (existingUser) {
-            return res.status(400).json({
+            return res.status(409).json({
                 message: "Username or email already exists",
             });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-
+        let userRole;
+        const rolls = "admin";
+        if (email === ADMIN_EMAIL) {
+            userRole = "admin";
+        }
         const user = await User.create({
             username,
             password: hashedPassword,

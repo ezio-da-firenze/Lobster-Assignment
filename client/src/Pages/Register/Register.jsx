@@ -66,14 +66,25 @@ const Register = () => {
         window.location.href = '/login';
       }, 1200);
     } catch (error) {
-      console.error('Error registering:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to register. Please try again later.',
-        status: 'error',
-        duration: 1000,
-        isClosable: true,
-      });
+      if (error.response.status === 409) {
+        console.error('Duplicate credentials:', error);
+        toast({
+          title: 'Error',
+          description: 'Failed to register. Duplicate credentials.',
+          status: 'error',
+          duration: 1000,
+          isClosable: true,
+        });
+      } else {
+        console.error('Error registering:', error);
+        toast({
+          title: 'Error',
+          description: 'Failed to register. Please try again later.',
+          status: 'error',
+          duration: 1000,
+          isClosable: true,
+        });
+      }
     }
   };
 
