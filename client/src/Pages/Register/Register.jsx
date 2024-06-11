@@ -67,7 +67,7 @@ const Register = () => {
       }, 1200);
     } catch (error) {
       if (error.response.status === 409) {
-        console.error('Duplicate credentials:', error);
+        // console.error('Duplicate credentials:', error);
         toast({
           title: 'Error',
           description: 'Failed to register. Duplicate credentials.',
@@ -76,7 +76,7 @@ const Register = () => {
           isClosable: true,
         });
       } else {
-        console.error('Error registering:', error);
+        // console.error('Error registering:', error);
         toast({
           title: 'Error',
           description: 'Failed to register. Please try again later.',

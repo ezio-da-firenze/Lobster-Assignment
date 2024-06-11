@@ -17,7 +17,7 @@ export const UserProvider = ({ children }) => {
       setUser(response.data.user);
       setUserEvents(response.data.registeredEvents);
     } catch (error) {
-      console.error('Error fetching user:', error);
+      // console.error('Error fetching user:', error);
     }
   };
 
@@ -31,7 +31,7 @@ export const UserProvider = ({ children }) => {
       setUser(null);
       setUserEvents(null);
     } catch (error) {
-      console.error('Error logging out:', error);
+      // console.error('Error logging out:', error);
     }
   };
 

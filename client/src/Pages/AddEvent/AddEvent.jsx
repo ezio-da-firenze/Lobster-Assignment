@@ -58,7 +58,6 @@ const AddEvent = () => {
       });
     } catch (error) {
       console.error('Error adding event:', error);
-      // Show error toast
       toast({
         title: 'Failed to Add Event',
         description: 'An error occurred while adding the event.',

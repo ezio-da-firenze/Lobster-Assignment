@@ -3,10 +3,14 @@ const bcrypt = require("bcrypt");
 require("dotenv").config();
 const createToken = require("../utils/createToken");
 const { JWT_SECRET, JWT_EXPIRY, ADMIN_EMAIL } = process.env;
+const { z } = require("zod");
+const {
+    UserRegistrationSchema,
+    UserLoginSchema,
+} = require("../utils/inputValidaiton");
 
 const registerUser = async (req, res) => {
     try {
-        console.log(ADMIN_EMAIL);
         const {
             username,
             password,
@@ -25,6 +29,15 @@ const registerUser = async (req, res) => {
                 message: "Please provide all details",
             });
         }
+        const userValidation = UserRegistrationSchema.safeParse(req.body);
+        if (!userValidation.success) {
+            console.log(userValidation.error.errors);
+            return res.status(400).json({
+                message: "Invalid input data",
+                errors: userValidation.error.errors,
+            });
+        }
+
         let role;
         if (email === ADMIN_EMAIL) {
             role = "admin";
@@ -82,6 +95,15 @@ const loginUser = async (req, res) => {
                 message: "Please enter all details",
             });
         }
+
+        const userValidation = UserLoginSchema.safeParse(req.body);
+        if (!userValidation.success) {
+            return res.status(400).json({
+                message: "Invalid input data",
+                errors: userValidation.error.errors,
+            });
+        }
+
         const user = await User.findOne({ where: { email } });
 
         if (!user) {

@@ -11,6 +11,9 @@ import {
   SimpleGrid,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+
+const MotionBox = motion(Box);
 
 const Events = () => {
   const [events, setEvents] = useState([]);
@@ -50,26 +53,25 @@ const Events = () => {
         </Center>
       ) : (
         <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={5}>
-          {events.map(event => {
+          {events.map((event, index) => {
             const eventDate = new Date(event.time);
-            const formattedDate = new Date(eventDate).toLocaleDateString();
-            const formattedTime = new Date(eventDate).toLocaleTimeString(
-              'en-US',
-              {
-                timeZone: 'UTC',
-                hour: 'numeric',
-                minute: '2-digit',
-              }
-            );
+            const formattedDate = eventDate.toLocaleDateString();
+            const formattedTime = eventDate.toLocaleTimeString('en-US', {
+              timeZone: 'UTC',
+              hour: 'numeric',
+              minute: '2-digit',
+            });
 
             return (
               <Link to={`/events/${event.id}`} key={event.id}>
-                <Box
+                <MotionBox
                   p={5}
                   shadow="md"
                   borderWidth="1px"
                   borderRadius="md"
-                  transition="0.3s"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.15 }}
                   _hover={{
                     shadow: 'lg',
                     transform: 'translateY(-5px)',
@@ -108,7 +110,7 @@ const Events = () => {
                       College: {event.college}
                     </Text>
                   </Stack>
-                </Box>
+                </MotionBox>
               </Link>
             );
           })}
