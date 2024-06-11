@@ -157,10 +157,11 @@ const loginUser = async (req, res) => {
 };
 
 const logoutUser = (req, res) => {
-    res.cookie("token", "", {
+    res.cookie("token", null, {
         httpOnly: true,
         secure: true,
         sameSite: "None",
+        maxAge: 0,
         expires: new Date(0),
     });
 

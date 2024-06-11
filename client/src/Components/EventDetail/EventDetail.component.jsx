@@ -23,7 +23,9 @@ const EventDetail = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/api/v1/events/${id}`)
+      .get(`http://localhost:3000/api/v1/events/${id}`, {
+        withCredentials: true,
+      })
       .then(response => {
         setEvent(response.data);
         setLoading(false);

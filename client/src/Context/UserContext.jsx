@@ -17,7 +17,11 @@ export const UserProvider = ({ children }) => {
         'http://localhost:3000/api/v1/user/profile',
         { withCredentials: true }
       );
-      setUser(response.data.user);
+      const userData = response.data.user;
+      setUser(userData);
+      // Set local storage values
+      localStorage.setItem('isloggedin', 'true');
+      localStorage.setItem('username', userData.username);
     } catch (error) {
       setError(error);
     } finally {
@@ -41,13 +45,14 @@ export const UserProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await axios.post(
-        'http://localhost:3000/api/v1/auth/logout',
-        {},
-        { withCredentials: true }
-      );
+      await axios.post('http://localhost:3000/api/v1/auth/logout', {
+        withCredentials: true,
+      });
       setUser(null);
       setEvents([]); // Clear events on logout
+      // Clear local storage values
+      localStorage.setItem('isloggedin', 'false');
+      localStorage.removeItem('username');
     } catch (error) {
       setError(error);
     }
