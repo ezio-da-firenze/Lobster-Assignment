@@ -2,12 +2,17 @@ const Registration = require("../models/Registration");
 const User = require("../models/User");
 const Event = require("../models/Event");
 
+// Event registration controller for user
 const registerEvent = async (req, res) => {
     try {
         const { eventId } = req.body;
+
+        // req.user is set in the middleware
         const user = req.user;
         const userId = user.id;
+
         const event = await Event.findByPk(eventId);
+        // Checks for event not found
         if (!event) {
             return res.status(404).json({ message: "Event not found" });
         }
@@ -21,11 +26,13 @@ const registerEvent = async (req, res) => {
             });
         }
 
+        // Creating an entry in the Registrations table
         const registration = await Registration.create({
             userId,
             eventId,
         });
 
+        // Increasing the number of registration by one for that event
         event.registrations += 1;
         await event.save();
 
@@ -42,8 +49,10 @@ const registerEvent = async (req, res) => {
     }
 };
 
+// Get user profile and registered events controller
 const getUserProfile = async (req, res) => {
     try {
+        // req.user is set in the middleware
         const userId = req.user.id;
 
         // Fetch user details
@@ -55,7 +64,7 @@ const getUserProfile = async (req, res) => {
             });
         }
 
-        // Fetch events the user has registered for
+        // Fetch events the user has registered
         const registrations = await Registration.findAll({
             where: { userId },
             include: [
@@ -68,10 +77,8 @@ const getUserProfile = async (req, res) => {
         const registeredEvents = registrations.map(
             (registration) => registration.eventId
         );
-        const userData = {
-            user,
-            registeredEvents,
-        };
+
+        // Send the user details and the registered events (only ids)
         res.status(200).json({
             user,
             registeredEvents,

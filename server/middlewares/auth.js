@@ -2,13 +2,14 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const User = require("../models/User");
 const { JWT_SECRET, JWT_EXPIRY, ADMIN_EMAIL } = process.env;
+
+// Two middlewares mostly similar
+
+// Authorize user to be passed before routes accessible only through user login
 const authorizeUser = async (req, res, next) => {
     const token = req.cookies.token;
-    console.log(
-        "x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-"
-    );
-    console.log(token);
-    console.log("JWT_SECRET:", JWT_SECRET);
+    // console.log(token);
+    // console.log("JWT_SECRET:", JWT_SECRET);
     if (token) {
         try {
             const decoded = jwt.verify(token, JWT_SECRET);
@@ -36,6 +37,7 @@ const authorizeUser = async (req, res, next) => {
     }
 };
 
+// Authorize admin middleware to be passed before routes accessible only to admins
 const authorizeAdmin = async (req, res, next) => {
     const token = req.cookies.token;
     console.log(token);

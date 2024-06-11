@@ -1,6 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db");
 
+// Registration model to find the regrstrations of a user
 const Registration = sequelize.define("Registration", {
     id: {
         type: DataTypes.INTEGER,

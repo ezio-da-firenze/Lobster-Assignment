@@ -5,8 +5,11 @@ export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [userEvents, setUserEvents] = useState(null);
+  const [events, setEvents] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [loadingUser, setLoadingUser] = useState(true);
+  const [loadingEvents, setLoadingEvents] = useState(true);
+  const [error, setError] = useState(null);
 
   const fetchUser = async () => {
     try {
@@ -15,9 +18,24 @@ export const UserProvider = ({ children }) => {
         { withCredentials: true }
       );
       setUser(response.data.user);
-      setUserEvents(response.data.registeredEvents);
     } catch (error) {
-      // console.error('Error fetching user:', error);
+      setError(error);
+    } finally {
+      setLoadingUser(false);
+    }
+  };
+
+  const fetchEvents = async () => {
+    try {
+      const response = await axios.get(
+        'http://localhost:3000/api/v1/events/my',
+        { withCredentials: true }
+      );
+      setEvents(response.data.events);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoadingEvents(false);
     }
   };
 
@@ -29,19 +47,30 @@ export const UserProvider = ({ children }) => {
         { withCredentials: true }
       );
       setUser(null);
-      setUserEvents(null);
+      setEvents([]); // Clear events on logout
     } catch (error) {
-      // console.error('Error logging out:', error);
+      setError(error);
     }
   };
 
   useEffect(() => {
     fetchUser();
+    fetchEvents(); // Fetch events when component mounts
   }, []);
 
   return (
     <UserContext.Provider
-      value={{ user, userEvents, isAdmin, fetchUser, logout }}
+      value={{
+        user,
+        isAdmin,
+        events,
+        loadingUser,
+        loadingEvents,
+        error,
+        fetchUser,
+        fetchEvents,
+        logout,
+      }}
     >
       {children}
     </UserContext.Provider>

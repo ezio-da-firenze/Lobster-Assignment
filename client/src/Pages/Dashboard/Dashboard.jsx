@@ -1,15 +1,36 @@
 import React, { useContext, useEffect, useCallback } from 'react';
 import { UserContext } from '../../Context/UserContext';
-import { Box, Text, VStack, Container, Avatar, HStack } from '@chakra-ui/react';
+import {
+  Box,
+  Text,
+  VStack,
+  Container,
+  Avatar,
+  HStack,
+  SimpleGrid,
+  Heading,
+} from '@chakra-ui/react';
 
 const Profile = () => {
-  const { user, userEvents, fetchUser } = useContext(UserContext);
+  const { user, events, fetchUser, fetchEvents } = useContext(UserContext);
   const fetchUserMemo = useCallback(() => {
     fetchUser();
   }, [fetchUser]);
 
+  const fetchEventsMemo = useCallback(() => {
+    fetchEvents();
+  }, [fetchEvents]);
+
+  // useEffect(() => {
+  //   fetchEvents(); // Fetch events when component mounts
+  //   console.log('Hi');
+  // }, [fetchEvents]);
+
   return (
     <Container maxW="container.md" mt={8}>
+      <Heading size="lg" my="8">
+        Profile
+      </Heading>
       <Box p={8} shadow="lg" borderWidth="1px" borderRadius="lg" bg="white">
         <HStack spacing={4} align="center">
           <Avatar
@@ -49,6 +70,30 @@ const Profile = () => {
           )}
         </VStack>
       </Box>
+
+      <Container maxW="container.lg" my={16}>
+        <Heading size="md" py="4">
+          Events Registered
+        </Heading>
+        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>
+          {events.map(event => (
+            <Box
+              key={event.id}
+              p={4}
+              borderWidth="1px"
+              borderRadius="md"
+              backgroundColor="gray.100"
+              _hover={{ backgroundColor: 'gray.200', cursor: 'pointer' }}
+            >
+              <Text fontSize="xl" fontWeight="bold">
+                {event.name}
+              </Text>
+              <Text>Date: {new Date(event.time).toLocaleDateString()}</Text>
+              <Text>College: {event.college}</Text>
+            </Box>
+          ))}
+        </SimpleGrid>
+      </Container>
     </Container>
   );
 };

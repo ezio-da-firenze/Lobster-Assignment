@@ -1,6 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db");
 
+// Event model with all the attributes
 const Event = sequelize.define("Event", {
     id: {
         type: DataTypes.INTEGER,

@@ -1,6 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db");
 
+// User model with all necessary attributes some of which are necessary for a user
 const User = sequelize.define("User", {
     id: {
         type: DataTypes.INTEGER,
@@ -15,6 +16,15 @@ const User = sequelize.define("User", {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
+    },
+    username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false,
     },
     contact: {
         type: DataTypes.STRING,
@@ -32,15 +42,6 @@ const User = sequelize.define("User", {
     yearOfStudy: {
         type: DataTypes.INTEGER,
         allowNull: true,
-    },
-    username: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-    },
-    password: {
-        type: DataTypes.STRING,
-        allowNull: false,
     },
     role: {
         type: DataTypes.STRING,
