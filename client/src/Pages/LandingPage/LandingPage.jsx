@@ -39,6 +39,7 @@ const LandingPage = () => {
     <div className="home">
       <Stack
         px={8}
+        py={0}
         h="100vh"
         direction={['column', 'row']}
         justifyContent={['center', 'space-around']}
@@ -51,7 +52,7 @@ const LandingPage = () => {
           transition={{ duration: 0.8 }}
         >
           <Heading>
-            {user ? 'Welcome back to Lobbie' : 'Welcome to Lobbie'}
+            {user ? `Welcome back ${user.name}!` : 'Welcome to Lobbie!'}
           </Heading>
           <Text>Manage your events with ease</Text>
           <HStack>
@@ -99,8 +100,8 @@ const LandingPage = () => {
         </motion.div>
       </Stack>
 
-      <Box mt={2} mb={20} px={20} w="full">
-        <Heading as="h2" size="xl" textAlign="center" mb={5}>
+      <Box mt={0} mb={20} px={20} w="full">
+        <Heading as="h2" size="xl" textAlign="center" mb={6}>
           Features
         </Heading>
         <SimpleGrid columns={[1, 1, 2, 3]} spacing={10}>
