@@ -48,14 +48,24 @@ const Login = () => {
         window.location.href = '/events';
       }, 1200);
     } catch (error) {
-      console.error('Error logging in:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to log in. Please try again later.',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
+      if (error.response && error.response.status === 401) {
+        toast({
+          title: 'Invalid Credentials',
+          description: 'Incorrect email or password. Please try again.',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+      } else {
+        console.error('Error logging in:', error);
+        toast({
+          title: 'Error',
+          description: 'Failed to log in. Please try again later.',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+      }
     }
   };
 

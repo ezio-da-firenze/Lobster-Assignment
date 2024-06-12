@@ -7,6 +7,6 @@ const { authorizeUser, authorizeAdmin } = require("../middlewares/auth");
 router.post("/add", authorizeAdmin, eventController.addEvent);
 router.get("/all", eventController.allEvents);
 router.get("/my", authorizeUser, eventController.getMyEvents);
-router.get("/:id", authorizeUser, eventController.getEventById);
+router.get("/:id", eventController.getEventById);
 
 module.exports = router;

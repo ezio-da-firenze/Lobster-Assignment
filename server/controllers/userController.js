@@ -9,6 +9,9 @@ const registerEvent = async (req, res) => {
 
         // req.user is set in the middleware
         const user = req.user;
+        if (!user) {
+            return res.status(403).json({ message: "Not logged in " });
+        }
         const userId = user.id;
 
         const event = await Event.findByPk(eventId);

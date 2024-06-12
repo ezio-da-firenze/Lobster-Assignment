@@ -38,10 +38,10 @@ const EventDetail = () => {
 
   const handleRegister = async () => {
     try {
-      const response = await axios.post(
+      await axios.post(
         'http://localhost:3000/api/v1/user/registerevent',
         { eventId: id },
-        { withCredentials: true } // Ensure credentials are sent with the request
+        { withCredentials: true }
       );
       setRegistered(true);
       toast({
@@ -53,8 +53,7 @@ const EventDetail = () => {
         variant: 'subtle',
       });
     } catch (error) {
-      if (error.response.status == 409) {
-        // console.error('Error registering for eventsdnfjdshjkfsdhfsdl:', error);
+      if (error.response.status === 409) {
         toast({
           title: 'Already registered',
           description: 'You are already registered for the event.',
@@ -155,8 +154,13 @@ const EventDetail = () => {
             <strong>Registrations:</strong> {registrations}
           </Text>
         </Stack>
-        <Button colorScheme="blue" mt={4} onClick={handleRegister}>
-          Register
+        <Button
+          colorScheme={registered ? 'green' : 'blue'}
+          mt={4}
+          onClick={handleRegister}
+          isDisabled={registered}
+        >
+          {registered ? 'Registered' : 'Register'}
         </Button>
       </Box>
     </Container>

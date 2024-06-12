@@ -31,7 +31,9 @@ const LandingPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <Heading>Welcome to Lobbie</Heading>
+          <Heading>
+            {user ? 'Welcome back to Lobbie' : 'Welcome to Lobbie'}
+          </Heading>
           <Text>Manage your events with ease</Text>
           <HStack>
             {!user ? (
