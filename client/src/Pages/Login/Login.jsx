@@ -12,7 +12,7 @@ import {
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useToast } from '@chakra-ui/react';
-import { motion } from 'framer-motion'; // Import Framer Motion
+import { motion } from 'framer-motion';
 
 const Login = () => {
   const toast = useToast();
@@ -112,15 +112,15 @@ const Login = () => {
           <Button colorScheme="blue" onClick={handleSubmit}>
             Login
           </Button>
-          {/* Additional line with Link to registration page */}
           <Text>
-            Don't have an account?{' '}
+            Don't have an account?
             <Link
               to="/register"
               style={{
                 fontWeight: 'bold',
                 color: '#3182ce',
                 textDecoration: 'underline',
+                marginLeft: '4px',
               }}
             >
               Register

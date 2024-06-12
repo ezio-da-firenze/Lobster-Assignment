@@ -100,7 +100,6 @@ const Register = () => {
           Register
         </Heading>
         <VStack spacing={6} maxW="md" mx="auto">
-          {/* Form fields */}
           <FormControl id="name" isRequired>
             <FormLabel>Name</FormLabel>
             <Input
@@ -196,13 +195,14 @@ const Register = () => {
             </FormControl>
           </HStack>
           <Text>
-            Already have an account?{' '}
+            Already have an account?
             <Link
               to="/login"
               style={{
                 fontWeight: 'bold',
                 color: '#3182ce',
                 textDecoration: 'underline',
+                marginLeft: '4px',
               }}
             >
               Login

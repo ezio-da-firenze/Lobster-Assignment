@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useCallback } from 'react';
+import React, { useContext } from 'react';
 import { UserContext } from '../../Context/UserContext';
 import {
   Box,
@@ -12,20 +12,7 @@ import {
 } from '@chakra-ui/react';
 
 const Profile = () => {
-  const { user, events, fetchUser, fetchEvents } = useContext(UserContext);
-  // const fetchUserMemo = useCallback(() => {
-  //   fetchUser();
-  // }, [fetchUser]);
-
-  // const fetchEventsMemo = useCallback(() => {
-  //   fetchEvents();
-  // }, [fetchEvents]);
-
-  // useEffect(() => {
-  //   fetchEvents(); // Fetch events when component mounts
-  //   console.log('Hi');
-  // }, [fetchEvents]);
-
+  const { user, events } = useContext(UserContext);
   return (
     <Container maxW="container.md" mt={8}>
       <Heading size="lg" my="8">

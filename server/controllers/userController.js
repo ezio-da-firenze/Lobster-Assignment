@@ -95,4 +95,44 @@ const getUserProfile = async (req, res) => {
     }
 };
 
-module.exports = { registerEvent, getUserProfile };
+// Controller to cancel event registration
+const removeEvent = async (req, res) => {
+    try {
+        const { eventId } = req.body;
+        const userId = req.user.id;
+
+        // Find the registration entry
+        const registration = await Registration.findOne({
+            where: { userId, eventId },
+        });
+
+        // If the registration doesn't exist
+        if (!registration) {
+            return res.status(404).json({
+                message: "Registration not found",
+            });
+        }
+
+        // Delete the registration entry
+        await registration.destroy();
+
+        // Decrease the registration count of the event
+        const event = await Event.findByPk(eventId);
+        if (event) {
+            event.registrations -= 1;
+            await event.save();
+        }
+
+        res.status(200).json({
+            message: "Event registration cancelled successfully",
+        });
+    } catch (error) {
+        console.error("Error cancelling event registration:", error);
+        res.status(500).json({
+            message: "Failed to cancel event registration",
+            error: error.message,
+        });
+    }
+};
+
+module.exports = { registerEvent, getUserProfile, removeEvent };

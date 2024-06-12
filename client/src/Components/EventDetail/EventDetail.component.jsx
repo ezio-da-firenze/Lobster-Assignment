@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import {
   Box,
   Heading,
@@ -36,6 +36,14 @@ const EventDetail = () => {
       });
   }, [id, registered]);
 
+  useEffect(() => {
+    // Getting status of registered from localstorage
+    const isRegistered = localStorage.getItem(`registered_${id}`);
+    if (isRegistered === 'true') {
+      setRegistered(true);
+    }
+  }, [id]);
+
   const handleRegister = async () => {
     try {
       await axios.post(
@@ -44,6 +52,7 @@ const EventDetail = () => {
         { withCredentials: true }
       );
       setRegistered(true);
+      localStorage.setItem(`registered_${id}`, 'true'); // Save registration status to local storeage
       toast({
         title: 'Registration successful',
         description: 'You have successfully registered for the event.',
@@ -102,7 +111,6 @@ const EventDetail = () => {
     college,
     createdBy,
     registrations,
-    imageUrl,
   } = event;
 
   // Format date and time
@@ -122,11 +130,7 @@ const EventDetail = () => {
         borderRadius="lg"
         backgroundColor="white"
       >
-        {/* Image of the event */}
-        {eventImage && (
-          <Image src={eventImage} alt={name} borderRadius="lg" mb={4} />
-        )}
-        {/* Details of the event */}
+        <Image src={eventImage} alt={name} borderRadius="lg" mb={4} />
         <Heading as="h1" size="lg" mb={2}>
           {name}
         </Heading>

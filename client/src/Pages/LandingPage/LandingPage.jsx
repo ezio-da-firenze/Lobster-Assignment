@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import {
-  Box,
   Button,
   Heading,
   HStack,
@@ -8,12 +7,30 @@ import {
   Stack,
   Text,
   VStack,
+  SimpleGrid,
+  Box,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion'; // Import Framer Motion
+import { motion } from 'framer-motion';
 import { UserContext } from '../../Context/UserContext';
-
+import Feature from './Feature';
 import lobster from '../../assets/lobster-home.png';
+
+const features = [
+  {
+    title: 'Easy Event Management',
+    description:
+      'Create and manage events effortlessly with our intuitive interface.',
+  },
+  {
+    title: 'Simple Interface',
+    description: 'Easy to use and simple interface to create and view events',
+  },
+  {
+    title: 'Real Time Changes',
+    description: 'View your events in real time and manage efficiently',
+  },
+];
 
 const LandingPage = () => {
   const { user } = useContext(UserContext);
@@ -21,6 +38,8 @@ const LandingPage = () => {
   return (
     <div className="home">
       <Stack
+        px={8}
+        h="100vh"
         direction={['column', 'row']}
         justifyContent={['center', 'space-around']}
         align="center"
@@ -79,6 +98,21 @@ const LandingPage = () => {
           <Image src={lobster} objectFit="contain" boxSize={['200px', 'xs']} />
         </motion.div>
       </Stack>
+
+      <Box mt={2} mb={20} px={20} w="full">
+        <Heading as="h2" size="xl" textAlign="center" mb={5}>
+          Features
+        </Heading>
+        <SimpleGrid columns={[1, 1, 2, 3]} spacing={10}>
+          {features.map((feature, index) => (
+            <Feature
+              key={index}
+              title={feature.title}
+              description={feature.description}
+            />
+          ))}
+        </SimpleGrid>
+      </Box>
     </div>
   );
 };
