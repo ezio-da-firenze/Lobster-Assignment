@@ -9,6 +9,7 @@ import {
   Select,
   VStack,
   useToast,
+  Heading,
 } from '@chakra-ui/react';
 import axios from 'axios';
 
@@ -70,6 +71,9 @@ const AddEvent = () => {
 
   return (
     <Box p={4}>
+      <Heading size="lg" pb="8" pt="4">
+        Add an Event
+      </Heading>
       <form onSubmit={handleSubmit}>
         <VStack spacing={4} align="stretch">
           <FormControl id="name" isRequired>

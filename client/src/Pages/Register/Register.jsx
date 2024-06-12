@@ -8,6 +8,7 @@ import {
   VStack,
   HStack,
   Text,
+  Heading,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -95,6 +96,9 @@ const Register = () => {
       transition={{ duration: 0.8 }}
     >
       <Box p={4}>
+        <Heading size="lg" mb="8" mt="4" ml="16">
+          Register
+        </Heading>
         <VStack spacing={6} maxW="md" mx="auto">
           {/* Form fields */}
           <FormControl id="name" isRequired>

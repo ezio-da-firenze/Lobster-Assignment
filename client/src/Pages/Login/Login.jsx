@@ -7,6 +7,7 @@ import {
   Input,
   VStack,
   Text,
+  Heading,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -56,6 +57,14 @@ const Login = () => {
           duration: 3000,
           isClosable: true,
         });
+      } else if (error.response && error.response.status === 404) {
+        toast({
+          title: 'User not Found',
+          description: 'No user with email',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
       } else {
         console.error('Error logging in:', error);
         toast({
@@ -76,6 +85,9 @@ const Login = () => {
       transition={{ duration: 0.8 }}
     >
       <Box p={4}>
+        <Heading size="lg" mb="8" mt="4" ml="16">
+          Login
+        </Heading>
         <VStack spacing={6} maxW="md" mx="auto">
           <FormControl id="email" isRequired>
             <FormLabel>Email</FormLabel>

@@ -9,15 +9,20 @@ import {
   Center,
   Container,
   SimpleGrid,
+  Input,
+  InputGroup,
+  InputLeftElement,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { RiSearch2Line } from 'react-icons/ri';
 
 const MotionBox = motion(Box);
 
 const Events = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
     axios
@@ -32,6 +37,16 @@ const Events = () => {
       });
   }, []);
 
+  // Funciton to set the search text on change of input
+  const handleSearch = event => {
+    setSearchText(event.target.value);
+  };
+
+  // Filter events on the basis of name
+  const filteredEvents = events.filter(event =>
+    event.name.toLowerCase().includes(searchText.toLowerCase())
+  );
+
   if (loading) {
     return (
       <Center minH="100vh">
@@ -45,7 +60,16 @@ const Events = () => {
       <Heading as="h1" size="xl" mb={5}>
         Current Events
       </Heading>
-      {events.length === 0 ? (
+      <InputGroup mb={5}>
+        <InputLeftElement pointerEvents="none" children={<RiSearch2Line />} />
+        <Input
+          type="text"
+          placeholder="Search events by name"
+          value={searchText}
+          onChange={handleSearch}
+        />
+      </InputGroup>
+      {filteredEvents.length === 0 ? (
         <Center>
           <Text fontSize="2xl" color="gray.500">
             No current events
@@ -53,7 +77,7 @@ const Events = () => {
         </Center>
       ) : (
         <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={5}>
-          {events.map((event, index) => {
+          {filteredEvents.map((event, index) => {
             const eventDate = new Date(event.time);
             const formattedDate = eventDate.toLocaleDateString();
             const formattedTime = eventDate.toLocaleTimeString('en-US', {

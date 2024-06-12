@@ -13,13 +13,13 @@ import {
 
 const Profile = () => {
   const { user, events, fetchUser, fetchEvents } = useContext(UserContext);
-  const fetchUserMemo = useCallback(() => {
-    fetchUser();
-  }, [fetchUser]);
+  // const fetchUserMemo = useCallback(() => {
+  //   fetchUser();
+  // }, [fetchUser]);
 
-  const fetchEventsMemo = useCallback(() => {
-    fetchEvents();
-  }, [fetchEvents]);
+  // const fetchEventsMemo = useCallback(() => {
+  //   fetchEvents();
+  // }, [fetchEvents]);
 
   // useEffect(() => {
   //   fetchEvents(); // Fetch events when component mounts
