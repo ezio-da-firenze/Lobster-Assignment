@@ -75,6 +75,7 @@ export const UserProvider = ({ children }) => {
         error,
         fetchUser,
         fetchEvents,
+        setEvents,
         logout,
       }}
     >

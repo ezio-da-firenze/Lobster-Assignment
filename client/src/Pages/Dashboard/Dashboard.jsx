@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { UserContext } from '../../Context/UserContext';
 import {
   Box,
@@ -9,10 +9,54 @@ import {
   HStack,
   SimpleGrid,
   Heading,
+  Button,
+  useToast,
 } from '@chakra-ui/react';
+import { RiCloseCircleLine } from 'react-icons/ri';
+import axios from 'axios';
 
 const Profile = () => {
-  const { user, events } = useContext(UserContext);
+  const { user, events, setEvents } = useContext(UserContext);
+  const [removing, setRemoving] = useState(false);
+  const toast = useToast();
+
+  const handleRemoveEvent = async eventId => {
+    setRemoving(true);
+    try {
+      await axios.post(
+        'http://localhost:3000/api/v1/user/removeevent',
+        { eventId },
+        { withCredentials: true }
+      );
+
+      // Update the events in the context
+      const updatedEvents = events.filter(event => event.id !== eventId);
+      setEvents(updatedEvents);
+
+      toast({
+        title: 'Event unregistered',
+        description: 'You have successfully unregistered from the event.',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        variant: 'subtle',
+      });
+    } catch (error) {
+      console.log(error.message);
+      toast({
+        title: 'Unregistration failed',
+        description:
+          'Failed to unregister from the event. Please try again later.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        variant: 'subtle',
+      });
+    } finally {
+      setRemoving(false);
+    }
+  };
+
   return (
     <Container maxW="container.md" mt={8}>
       <Heading size="lg" my="8">
@@ -62,17 +106,30 @@ const Profile = () => {
         <Heading size="md" py="4">
           Events Registered
         </Heading>
-        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>
+        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
           {events.map(event => (
             <Box
               key={event.id}
-              p={4}
+              position="relative"
+              p={6}
               borderWidth="1px"
               borderRadius="md"
               backgroundColor="gray.100"
               _hover={{ backgroundColor: 'gray.200', cursor: 'pointer' }}
             >
-              <Text fontSize="xl" fontWeight="bold">
+              <Button
+                position="absolute"
+                top={2}
+                right={2}
+                rounded="full"
+                variant="ghost"
+                size="sm"
+                onClick={() => handleRemoveEvent(event.id)}
+                isLoading={removing}
+              >
+                <RiCloseCircleLine />
+              </Button>
+              <Text fontSize="2xl" fontWeight="bold">
                 {event.name}
               </Text>
               <Text>Date: {new Date(event.time).toLocaleDateString()}</Text>

@@ -21,23 +21,28 @@ const EventDetail = () => {
   const [registered, setRegistered] = useState(false);
   const toast = useToast();
 
-  useEffect(() => {
-    axios
-      .get(`http://localhost:3000/api/v1/events/${id}`, {
-        withCredentials: true,
-      })
-      .then(response => {
-        setEvent(response.data);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error('Error fetching event detail:', error);
-        setLoading(false);
-      });
-  }, [id, registered]);
+  const fetchEventDetails = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/api/v1/events/${id}`,
+        {
+          withCredentials: true,
+        }
+      );
+      setEvent(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching event detail:', error);
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // Getting status of registered from localstorage
+    fetchEventDetails();
+  }, [id]);
+
+  useEffect(() => {
+    // Getting registered status from localstorage
     const isRegistered = localStorage.getItem(`registered_${id}`);
     if (isRegistered === 'true') {
       setRegistered(true);
@@ -52,7 +57,8 @@ const EventDetail = () => {
         { withCredentials: true }
       );
       setRegistered(true);
-      localStorage.setItem(`registered_${id}`, 'true'); // Save registration status to local storeage
+      localStorage.setItem(`registered_${id}`, 'true');
+      await fetchEventDetails();
       toast({
         title: 'Registration successful',
         description: 'You have successfully registered for the event.',
@@ -61,6 +67,9 @@ const EventDetail = () => {
         isClosable: true,
         variant: 'subtle',
       });
+      setTimeout(() => {
+        window.location.reload();
+      }, 1200);
     } catch (error) {
       if (error.response.status === 409) {
         toast({
@@ -158,13 +167,8 @@ const EventDetail = () => {
             <strong>Registrations:</strong> {registrations}
           </Text>
         </Stack>
-        <Button
-          colorScheme={registered ? 'green' : 'blue'}
-          mt={4}
-          onClick={handleRegister}
-          isDisabled={registered}
-        >
-          {registered ? 'Registered' : 'Register'}
+        <Button colorScheme="blue" mt={4} onClick={handleRegister}>
+          Register
         </Button>
       </Box>
     </Container>

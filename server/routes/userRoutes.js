@@ -6,5 +6,6 @@ const { authorizeUser, authorizeAdmin } = require("../middlewares/auth");
 // Routes for user actions
 router.post("/registerevent", authorizeUser, userController.registerEvent);
 router.get("/profile", authorizeUser, userController.getUserProfile);
+router.post("/removeevent", authorizeUser, userController.removeEvent);
 
 module.exports = router;
