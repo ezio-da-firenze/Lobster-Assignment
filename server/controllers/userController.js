@@ -99,9 +99,9 @@ const getUserProfile = async (req, res) => {
 const removeEvent = async (req, res) => {
     try {
         const { eventId } = req.body;
+        // req.user is set in the middleware
         const userId = req.user.id;
 
-        // Find the registration entry
         const registration = await Registration.findOne({
             where: { userId, eventId },
         });
