@@ -1,4 +1,3 @@
-import React from "react";
 import { Box, Heading, Text } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 
@@ -7,6 +6,7 @@ const MotionBox = motion(Box);
 const Feature = ({ title, description }) => {
     return (
         <MotionBox
+            bg="#E2E8F0"
             p={5}
             shadow="md"
             borderWidth="1px"
