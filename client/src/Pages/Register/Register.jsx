@@ -21,6 +21,7 @@ const Register = () => {
         name: "",
         username: "",
         password: "",
+        confirmPassword: "",
         email: "",
         contact: "",
         college: "",
@@ -28,13 +29,53 @@ const Register = () => {
         department: "",
         yearOfStudy: "",
     });
-
+    const [confirmTouched, setConfirmTouched] = useState(false);
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
 
+    const getConfirmPasswordBorderColor = () => {
+        if (!confirmTouched) return "gray.200"; // Default
+        if (formData.confirmPassword === formData.password) return "green.500";
+        return "red.500";
+    };
+
     const handleSubmit = async () => {
+        const requiredFields = [
+            "name",
+            "username",
+            "email",
+            "password",
+            "confirmPassword",
+            "college",
+        ];
+
+        for (const field of requiredFields) {
+            if (!formData[field]) {
+                toast({
+                    title: "Missing Field",
+                    description: `Please fill the ${field} field.`,
+                    status: "warning",
+                    duration: 2000,
+                    isClosable: true,
+                    position: "top",
+                });
+                return;
+            }
+        }
+
+        if (formData.password !== formData.confirmPassword) {
+            toast({
+                title: "Password Mismatch",
+                description: "Password and Confirm Password do not match.",
+                status: "error",
+                duration: 2000,
+                isClosable: true,
+                position: "top",
+            });
+            return;
+        }
         try {
             const response = await axios.post(
                 "https://lobster-assignment-backend.onrender.com/api/v1/auth/register",
@@ -120,16 +161,7 @@ const Register = () => {
                             onChange={handleChange}
                         />
                     </FormControl>
-                    <FormControl id="password" isRequired>
-                        <FormLabel>Password</FormLabel>
-                        <Input
-                            type="password"
-                            placeholder="Enter your password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                        />
-                    </FormControl>
+
                     <FormControl id="email" isRequired>
                         <FormLabel>Email</FormLabel>
                         <Input
@@ -140,6 +172,38 @@ const Register = () => {
                             onChange={handleChange}
                         />
                     </FormControl>
+
+                    {/*  */}
+                    <FormControl id="password" isRequired>
+                        <FormLabel>Password</FormLabel>
+                        <Input
+                            type="password"
+                            placeholder="Enter your password"
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange}
+                        />
+                    </FormControl>
+                    {/*  */}
+                    <FormControl id="confirmPassword" isRequired>
+                        <FormLabel>Confirm Password</FormLabel>
+                        <Input
+                            type="password"
+                            placeholder="Confirm your password"
+                            name="confirmPassword"
+                            value={formData.confirmPassword}
+                            onChange={handleChange}
+                            onFocus={() => setConfirmTouched(true)}
+                            borderColor={getConfirmPasswordBorderColor()}
+                            _hover={{
+                                borderColor: getConfirmPasswordBorderColor(),
+                            }}
+                            _focusVisible={{
+                                borderColor: getConfirmPasswordBorderColor(),
+                            }}
+                        />
+                    </FormControl>
+                    {/*  */}
                     <FormControl id="contact">
                         <FormLabel>Contact Number</FormLabel>
                         <Input
