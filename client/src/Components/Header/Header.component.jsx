@@ -71,6 +71,16 @@ const Header = () => {
                                         Events
                                     </Button>
                                 </Link>
+                                {user && (
+                                    <Link to="/addevent" onClick={onClose}>
+                                        <Button
+                                            variant="ghost"
+                                            colorScheme="blue"
+                                        >
+                                            Add Event
+                                        </Button>
+                                    </Link>
+                                )}
                                 {user ? (
                                     <>
                                         <Link to="/profile" onClick={onClose}>

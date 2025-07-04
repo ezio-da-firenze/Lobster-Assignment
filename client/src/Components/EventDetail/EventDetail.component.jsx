@@ -14,6 +14,7 @@ import {
 import axios from "axios";
 import eventImage from "../../assets/hall.jpg";
 
+const BASE_URL = "https://lobster-assignment-backend.onrender.com";
 const EventDetail = () => {
     const { id } = useParams();
     const [event, setEvent] = useState(null);
@@ -24,12 +25,13 @@ const EventDetail = () => {
     const fetchEventDetails = async () => {
         try {
             const response = await axios.get(
-                `https://lobster-assignment-backend.onrender.com/api/v1/${id}`,
+                `${BASE_URL}/api/v1/events/${id}`,
                 {
                     withCredentials: true,
                 }
             );
-            setEvent(response.data);
+            console.log("API response:", response.data);
+            setEvent(response.data.event || response.data); // Adjust here based on log
             setLoading(false);
         } catch (error) {
             console.error("Error fetching event detail:", error);
@@ -52,7 +54,7 @@ const EventDetail = () => {
     const handleRegister = async () => {
         try {
             await axios.post(
-                "https://lobster-assignment-backend.onrender.com/api/v1/user/registerevent",
+                `${BASE_URL}/api/v1/user/registerevent`,
                 { eventId: id },
                 { withCredentials: true }
             );

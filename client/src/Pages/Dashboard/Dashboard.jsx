@@ -14,12 +14,13 @@ import {
 } from "@chakra-ui/react";
 import { RiCloseCircleLine } from "react-icons/ri";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
     const { user, events, setEvents } = useContext(UserContext);
     const [removing, setRemoving] = useState(false);
     const toast = useToast();
-
+    const navigate = useNavigate();
     const handleRemoveEvent = async (eventId) => {
         setRemoving(true);
         try {
@@ -125,6 +126,7 @@ const Profile = () => {
                     {events.map((event) => (
                         <Box
                             key={event.id}
+                            onClick={() => navigate(`/events/${event.id}`)}
                             position="relative"
                             p={6}
                             borderWidth="1px"

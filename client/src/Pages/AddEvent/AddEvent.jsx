@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 
+const URL = "https://lobster-assignment-backend.onrender.com/api/v1/events/add";
 const AddEvent = () => {
     const [formData, setFormData] = useState({
         name: "",
@@ -35,11 +36,9 @@ const AddEvent = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(
-                "https://lobster-assignment-backend.onrender.com/api/v1/events/add",
-                formData,
-                { withCredentials: true }
-            );
+            const response = await axios.post(URL, formData, {
+                withCredentials: true,
+            });
             console.log(response.data);
             // Show success toast
             toast({
