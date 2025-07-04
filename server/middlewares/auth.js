@@ -1,85 +1,64 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const User = require("../models/User");
-const { JWT_SECRET, JWT_EXPIRY, ADMIN_EMAIL } = process.env;
+const { JWT_SECRET, ADMIN_EMAIL } = process.env;
 
-// Two middlewares mostly similar
+const getUserFromToken = async (token) => {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const user = await User.findOne({ where: { username: decoded.username } });
+    return user;
+};
 
-// Authorize user to be passed before routes accessible only through user login
 const authorizeUser = async (req, res, next) => {
     const token = req.cookies.token;
-    // console.log(token);
-    // console.log("JWT_SECRET:", JWT_SECRET);
-    if (token) {
-        try {
-            const decoded = jwt.verify(token, JWT_SECRET);
 
-            // console.log(decoded);
-            req.user = await User.findOne({
-                where: { username: decoded.username },
-            });
+    if (!token) {
+        return res.status(401).json({ message: "No token provided" });
+    }
 
-            if (req.user) {
-                // console.log("Valid USER");
-                next();
-            } else {
-                // console.log("Not Valid USER");
-                res.status(401).json({ message: "Token Error" });
-            }
-        } catch (error) {
-            // console.log(error);
-            // console.log("Not authorized Token failed");
-            res.status(401).json({ message: "Token Error" });
+    try {
+        const user = await getUserFromToken(token);
+
+        if (!user) {
+            return res.status(401).json({ message: "Invalid token" });
         }
-    } else {
-        // console.log("Token Undefined");
-        res.status(401).json({ message: "Token Error" });
+
+        req.user = user;
+        next();
+    } catch (error) {
+        return res.status(401).json({ message: "Token verification failed" });
     }
 };
 
-// Authorize admin middleware to be passed before routes accessible only to admins
 const authorizeAdmin = async (req, res, next) => {
     const token = req.cookies.token;
-    console.log(token);
-    if (token) {
-        try {
-            console.log(JWT_SECRET);
-            const decoded = jwt.verify(token, JWT_SECRET);
-            console.log(decoded);
 
-            req.user = await User.findOne({
-                where: { username: decoded.username },
-            });
+    if (!token) {
+        return res.status(401).json({ message: "No token provided" });
+    }
 
-            if (req.user === null) {
-                console.log("Not authorized Token failed");
-                res.status(401).json({ message: "Token Error" });
-            }
-            //
-            else if (req.user.email === ADMIN_EMAIL) {
-                console.log("Verified Admin");
-                req.user.role = "admin";
-                await req.user.save();
-                next();
-            }
-            //
-            else if (req.user.email !== ADMIN_EMAIL) {
-                console.log("Not verified admin");
-                res.status(403).json({ message: "Not verified admin" });
-            }
-            //
-            else if (!req.user) {
-                console.log("Token not verified");
-                res.status(401).json({ message: "Not verified token" });
-            }
-        } catch (error) {
-            console.log(error);
-            console.log("Not authorized Token failed");
-            res.status(401).json({ message: "Token Error" });
+    try {
+        const user = await getUserFromToken(token);
+
+        if (!user) {
+            return res.status(401).json({ message: "Invalid token" });
         }
-    } else {
-        console.log("Token Undefined");
-        res.status(401).json({ message: "Token Error" });
+
+        if (user.email !== ADMIN_EMAIL) {
+            return res
+                .status(403)
+                .json({ message: "Access denied: not an admin" });
+        }
+
+        req.user = user;
+        if (user.role !== "admin") {
+            user.role = "admin";
+            await user.save();
+        }
+
+        next();
+    } catch (error) {
+        return res.status(401).json({ message: "Token verification failed" });
     }
 };
 

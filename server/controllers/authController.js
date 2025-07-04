@@ -14,6 +14,7 @@ const registerUser = async (req, res) => {
         const {
             username,
             password,
+            confirmPassword,
             name,
             email,
             contact,
@@ -24,7 +25,15 @@ const registerUser = async (req, res) => {
         } = req.body;
 
         // validate input
-        if (!username || !password || !name || !email || !college || !course) {
+        if (
+            !username ||
+            !password ||
+            !name ||
+            !email ||
+            !college ||
+            !course ||
+            !confirmPassword
+        ) {
             return res.status(400).json({
                 message: "Please provide all details",
             });
@@ -38,9 +47,15 @@ const registerUser = async (req, res) => {
             });
         }
 
-        let role;
+        let role = "user";
         if (email === ADMIN_EMAIL) {
-            role = "admin";
+            const isAdminPasswordValid = await bcrypt.compare(
+                password,
+                await bcrypt.hash(ADMIN_PASSWORD, 10)
+            );
+            if (isAdminPasswordValid) {
+                role = "admin";
+            }
         }
         // check for existing username or email
         const existingUser =
