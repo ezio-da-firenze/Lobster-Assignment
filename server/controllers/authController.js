@@ -70,10 +70,6 @@ const registerUser = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        let userRole;
-        // if (email === ADMIN_EMAIL) {
-        //     userRole = "admin";
-        // }
         const user = await User.create({
             username,
             password: hashedPassword,
