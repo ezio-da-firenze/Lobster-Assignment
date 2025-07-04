@@ -2,7 +2,7 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 require("dotenv").config();
 const createToken = require("../utils/createToken");
-const { JWT_SECRET, JWT_EXPIRY, ADMIN_EMAIL } = process.env;
+const { JWT_SECRET, JWT_EXPIRY, ADMIN_EMAIL, ADMIN_PASSWORD } = process.env;
 const { z } = require("zod");
 const {
     UserRegistrationSchema,
