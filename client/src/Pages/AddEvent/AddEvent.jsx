@@ -14,6 +14,7 @@ import {
 import axios from "axios";
 
 const URL = "https://lobster-assignment-backend.onrender.com/api/v1/events/add";
+
 const AddEvent = () => {
     const [formData, setFormData] = useState({
         name: "",
@@ -23,6 +24,9 @@ const AddEvent = () => {
         category: "",
     });
 
+    const [thumbnail, setThumbnail] = useState(null);
+    const toast = useToast();
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -31,16 +35,30 @@ const AddEvent = () => {
         }));
     };
 
-    const toast = useToast();
+    const handleFileChange = (e) => {
+        setThumbnail(e.target.files[0]); // Only the first file
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const payload = new FormData();
+        Object.entries(formData).forEach(([key, value]) =>
+            payload.append(key, value)
+        );
+        if (thumbnail) {
+            payload.append("thumbnail", thumbnail);
+        }
+
         try {
-            const response = await axios.post(URL, formData, {
+            const response = await axios.post(URL, payload, {
                 withCredentials: true,
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
             });
             console.log(response.data);
-            // Show success toast
+
             toast({
                 title: "Event Added",
                 description: "Event has been successfully added.",
@@ -48,7 +66,7 @@ const AddEvent = () => {
                 duration: 3000,
                 isClosable: true,
             });
-            // Clear form data after successful submission
+
             setFormData({
                 name: "",
                 location: "",
@@ -56,6 +74,7 @@ const AddEvent = () => {
                 time: "",
                 category: "",
             });
+            setThumbnail(null);
         } catch (error) {
             console.error("Error adding event:", error);
             toast({
@@ -73,7 +92,7 @@ const AddEvent = () => {
             <Heading size="lg" pb="8" pt="4">
                 Add an Event
             </Heading>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} encType="multipart/form-data">
                 <VStack spacing={4} align="stretch">
                     <FormControl id="name" isRequired>
                         <FormLabel>Name</FormLabel>
@@ -84,6 +103,7 @@ const AddEvent = () => {
                             onChange={handleChange}
                         />
                     </FormControl>
+
                     <FormControl id="location">
                         <FormLabel>Location</FormLabel>
                         <Input
@@ -93,6 +113,7 @@ const AddEvent = () => {
                             onChange={handleChange}
                         />
                     </FormControl>
+
                     <FormControl id="description">
                         <FormLabel>Description</FormLabel>
                         <Textarea
@@ -101,6 +122,7 @@ const AddEvent = () => {
                             onChange={handleChange}
                         />
                     </FormControl>
+
                     <FormControl id="time" isRequired>
                         <FormLabel>Time</FormLabel>
                         <Input
@@ -110,6 +132,7 @@ const AddEvent = () => {
                             onChange={handleChange}
                         />
                     </FormControl>
+
                     <FormControl id="category" isRequired>
                         <FormLabel>Category</FormLabel>
                         <Select
@@ -122,6 +145,16 @@ const AddEvent = () => {
                             <option value="technical">Technical</option>
                         </Select>
                     </FormControl>
+
+                    <FormControl id="thumbnail">
+                        <FormLabel>Thumbnail Image</FormLabel>
+                        <Input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleFileChange}
+                        />
+                    </FormControl>
+
                     <Button type="submit" colorScheme="blue">
                         Add Event
                     </Button>
