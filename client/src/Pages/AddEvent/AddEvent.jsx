@@ -24,9 +24,6 @@ const AddEvent = () => {
         category: "",
     });
 
-    const [thumbnail, setThumbnail] = useState(null); // 🆕 File state
-    const toast = useToast();
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -59,6 +56,7 @@ const AddEvent = () => {
             });
 
             console.log(response.data);
+            // Show success toast
             toast({
                 title: "Event Added",
                 description: "Event has been successfully added.",
