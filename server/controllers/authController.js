@@ -57,6 +57,7 @@ const registerUser = async (req, res) => {
                 role = "admin";
             }
         }
+        // console.log("Incoming registration payload:", req.body);
         // check for existing username or email
         const existingUser =
             (await User.findOne({ where: { username } })) ||
@@ -92,7 +93,7 @@ const registerUser = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             message: "Registration failed",
-            error: error.message,
+            error: error,
         });
     }
 };
@@ -100,7 +101,7 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
-        console.log("Hi");
+        // console.log("Hi");
         if (!email || !password) {
             return res.status(400).json({
                 message: "Please enter all details",

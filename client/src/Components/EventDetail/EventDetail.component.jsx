@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import cultureLogo from "../../assets/culture.png";
+import techLogo from "../../assets/tech.png";
 import {
     Box,
     Heading,
@@ -12,39 +14,23 @@ import {
     useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
+import { EventDetailContext } from "../../Context/Event.Context";
 import eventImage from "../../assets/hall.jpg";
 
 const BASE_URL = "https://lobster-assignment-backend.onrender.com";
+
 const EventDetail = () => {
     const { id } = useParams();
-    const [event, setEvent] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const { eventDetail, fetchEventDetail, loadingEvent } =
+        useContext(EventDetailContext);
     const [registered, setRegistered] = useState(false);
     const toast = useToast();
 
-    const fetchEventDetails = async () => {
-        try {
-            const response = await axios.get(
-                `${BASE_URL}/api/v1/events/${id}`,
-                {
-                    withCredentials: true,
-                }
-            );
-            console.log("API response:", response.data);
-            setEvent(response.data.event || response.data); // Adjust here based on log
-            setLoading(false);
-        } catch (error) {
-            console.error("Error fetching event detail:", error);
-            setLoading(false);
-        }
-    };
-
     useEffect(() => {
-        fetchEventDetails();
+        fetchEventDetail(id);
     }, [id]);
 
     useEffect(() => {
-        // Getting registered status from localstorage
         const isRegistered = localStorage.getItem(`registered_${id}`);
         if (isRegistered === "true") {
             setRegistered(true);
@@ -58,9 +44,10 @@ const EventDetail = () => {
                 { eventId: id },
                 { withCredentials: true }
             );
+
             setRegistered(true);
             localStorage.setItem(`registered_${id}`, "true");
-            await fetchEventDetails();
+            await fetchEventDetail(id);
             toast({
                 title: "Registration successful",
                 description: "You have successfully registered for the event.",
@@ -69,11 +56,19 @@ const EventDetail = () => {
                 isClosable: true,
                 variant: "subtle",
             });
-            setTimeout(() => {
-                window.location.reload();
-            }, 1200);
         } catch (error) {
-            if (error.response.status === 409) {
+            const status = error?.response?.status;
+
+            if (status === 401) {
+                toast({
+                    title: "Not logged in",
+                    description: "Please log in to register for the event.",
+                    status: "warning",
+                    duration: 3000,
+                    isClosable: true,
+                    variant: "subtle",
+                });
+            } else if (status === 409) {
                 toast({
                     title: "Already registered",
                     description: "You are already registered for the event.",
@@ -96,7 +91,7 @@ const EventDetail = () => {
         }
     };
 
-    if (loading) {
+    if (loadingEvent) {
         return (
             <Box textAlign="center">
                 <Spinner size="xl" />
@@ -105,7 +100,7 @@ const EventDetail = () => {
         );
     }
 
-    if (!event) {
+    if (!eventDetail) {
         return (
             <Box textAlign="center">
                 <Text>No event found</Text>
@@ -122,18 +117,26 @@ const EventDetail = () => {
         college,
         createdBy,
         registrations,
-    } = event;
+    } = eventDetail;
 
-    // Format date and time
     const formattedDate = new Date(time).toLocaleDateString();
     const formattedTime = new Date(time).toLocaleTimeString("en-US", {
         timeZone: "UTC",
         hour: "numeric",
         minute: "2-digit",
     });
+    const categoryLogos = {
+        cultural: cultureLogo,
+        technical: techLogo,
+    };
+    const selectedLogo = categoryLogos[category] || null;
 
     return (
-        <Container maxW={{ base: "container.sm", md: "container.md" }} mt={4}>
+        <Container
+            maxW={{ base: "container.sm", md: "container.md" }}
+            mt={4}
+            mb={50}
+        >
             <Box
                 p={6}
                 shadow="md"
@@ -141,7 +144,30 @@ const EventDetail = () => {
                 borderRadius="lg"
                 backgroundColor="white"
             >
-                <Image src={eventImage} alt={name} borderRadius="lg" mb={4} />
+                <Image
+                    src={eventDetail.thumbnail || eventImage}
+                    alt={name}
+                    borderRadius="lg"
+                    mb={4}
+                    objectFit="cover"
+                    w="100%"
+                    h={{
+                        base: "320px",
+                        sm: "350px",
+                        md: "370px",
+                    }}
+                    // maxH="300px"
+                />
+
+                {selectedLogo && (
+                    <Image
+                        src={selectedLogo}
+                        alt={`${category} logo`}
+                        boxSize="60px"
+                        mb={2}
+                        mx="auto"
+                    />
+                )}
                 <Heading as="h1" size="lg" mb={2}>
                     {name}
                 </Heading>
@@ -169,8 +195,13 @@ const EventDetail = () => {
                         <strong>Registrations:</strong> {registrations}
                     </Text>
                 </Stack>
-                <Button colorScheme="blue" mt={4} onClick={handleRegister}>
-                    Register
+                <Button
+                    colorScheme="blue"
+                    mt={4}
+                    onClick={handleRegister}
+                    isDisabled={registered}
+                >
+                    {registered ? "Already Registered" : "Register"}
                 </Button>
             </Box>
         </Container>

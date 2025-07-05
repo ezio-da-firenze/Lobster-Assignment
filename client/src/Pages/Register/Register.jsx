@@ -15,6 +15,9 @@ import { motion } from "framer-motion";
 import axios from "axios";
 import { useToast } from "@chakra-ui/react";
 
+// const BASE_URL = "https://lobster-assignment-backend.onrender.com";
+const BASE_URL = "http://localhost:3000";
+
 const Register = () => {
     const toast = useToast();
     const [formData, setFormData] = useState({
@@ -76,12 +79,17 @@ const Register = () => {
             });
             return;
         }
+        const payload = {
+            ...formData,
+            yearOfStudy: formData.yearOfStudy
+                ? parseInt(formData.yearOfStudy, 10)
+                : undefined,
+        };
         try {
             const response = await axios.post(
-                "https://lobster-assignment-backend.onrender.com/api/v1/auth/register",
-                formData
+                `${BASE_URL}/api/v1/auth/register`,
+                payload
             );
-
             console.log("Registration successful:", response.data);
 
             toast({
@@ -97,6 +105,7 @@ const Register = () => {
                 name: "",
                 username: "",
                 password: "",
+                confirmPassword: "",
                 email: "",
                 contact: "",
                 college: "",
@@ -118,7 +127,7 @@ const Register = () => {
                     isClosable: true,
                 });
             } else {
-                // console.error('Error registering:', error);
+                console.error("Error registering:", error);
                 toast({
                     title: "Error",
                     description: "Failed to register. Please try again later.",
@@ -204,7 +213,7 @@ const Register = () => {
                         />
                     </FormControl>
                     {/*  */}
-                    <FormControl id="contact">
+                    <FormControl id="contact" isRequired>
                         <FormLabel>Contact Number</FormLabel>
                         <Input
                             type="tel"

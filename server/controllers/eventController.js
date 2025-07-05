@@ -2,19 +2,19 @@ const Event = require("../models/Event");
 const Registration = require("../models/Registration");
 const User = require("../models/User");
 
-// Controller for admins to add events
 const addEvent = async (req, res) => {
     try {
         const { name, location, description, time, category } = req.body;
-        // req.user is set in the middleware
         const user = req.user;
 
-        // These four fields are necessary for event
         if (!name || !category || !time || !location) {
             return res
                 .status(400)
                 .json({ message: "Please enter all necessary fields." });
         }
+
+        const thumbnail = req.file ? req.file.path : null;
+
         const event = await Event.create({
             name,
             location,
@@ -23,6 +23,7 @@ const addEvent = async (req, res) => {
             category,
             college: user.college,
             createdBy: user.username,
+            thumbnail,
         });
 
         res.status(201).json({ message: "Event created successfully", event });

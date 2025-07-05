@@ -91,22 +91,43 @@ const Events = () => {
                                     }}
                                 >
                                     <Box
-                                        boxSize="150px"
-                                        bg="gray.200"
+                                        // boxSize="150px"
+                                        // h={"15vh"}
+                                        h={{
+                                            base: "120px",
+                                            sm: "150px",
+                                            md: "170px",
+                                        }}
                                         borderRadius="md"
+                                        overflow="hidden"
+                                        mb={4}
+                                        bg="gray.100"
                                         display="flex"
                                         alignItems="center"
                                         justifyContent="center"
-                                        mb={4}
                                     >
-                                        <Text
-                                            fontSize="3xl"
-                                            fontWeight="bold"
-                                            color="gray.600"
-                                        >
-                                            {event.name.charAt(0)}
-                                        </Text>
+                                        {event.thumbnail ? (
+                                            <img
+                                                src={event.thumbnail}
+                                                alt={`${event.name} thumbnail`}
+                                                loading="lazy"
+                                                style={{
+                                                    width: "100%",
+                                                    height: "100%",
+                                                    objectFit: "cover",
+                                                }}
+                                            />
+                                        ) : (
+                                            <Text
+                                                fontSize="3xl"
+                                                fontWeight="bold"
+                                                color="gray.600"
+                                            >
+                                                {event.name.charAt(0)}
+                                            </Text>
+                                        )}
                                     </Box>
+
                                     <Stack>
                                         <Heading fontSize="xl">
                                             {event.name}

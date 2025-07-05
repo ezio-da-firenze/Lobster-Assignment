@@ -11,7 +11,7 @@ const UserRegistrationSchema = z.object({
     course: z.string().optional(),
     role: z.string().optional(),
     department: z.string().optional(),
-    yearOfStudy: z.string().optional(),
+    yearOfStudy: z.union([z.string(), z.number()]).optional(),
 });
 
 const UserLoginSchema = z.object({

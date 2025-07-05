@@ -1,7 +1,9 @@
 import { ChakraProvider, Box, theme } from "@chakra-ui/react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
 import { UserProvider } from "./Context/User.Context";
 import { AllEventsProvider } from "./Context/AllEvents.Context";
+import { EventDetailProvider } from "./Context/Event.Context"; // ✅ Correct import
 
 import LandingPage from "./Pages/LandingPage/LandingPage";
 import Header from "./Components/Header/Header.component";
@@ -19,28 +21,33 @@ function App() {
                 <Router>
                     <UserProvider>
                         <AllEventsProvider>
-                            <Header />
-                            <Routes>
-                                <Route path="/" element={<LandingPage />} />
-                                <Route
-                                    path="/register"
-                                    element={<Register />}
-                                />
-                                <Route path="/login" element={<Login />} />
-                                <Route path="/events" element={<Events />} />
-                                <Route
-                                    path="/events/:id"
-                                    element={<EventDetail />}
-                                />
-                                <Route
-                                    path="/profile"
-                                    element={<Dashboard />}
-                                />
-                                <Route
-                                    path="/addevent"
-                                    element={<AddEvent />}
-                                />
-                            </Routes>
+                            <EventDetailProvider>
+                                <Header />
+                                <Routes>
+                                    <Route path="/" element={<LandingPage />} />
+                                    <Route
+                                        path="/register"
+                                        element={<Register />}
+                                    />
+                                    <Route path="/login" element={<Login />} />
+                                    <Route
+                                        path="/events"
+                                        element={<Events />}
+                                    />
+                                    <Route
+                                        path="/events/:id"
+                                        element={<EventDetail />}
+                                    />
+                                    <Route
+                                        path="/profile"
+                                        element={<Dashboard />}
+                                    />
+                                    <Route
+                                        path="/addevent"
+                                        element={<AddEvent />}
+                                    />
+                                </Routes>
+                            </EventDetailProvider>
                         </AllEventsProvider>
                     </UserProvider>
                 </Router>
