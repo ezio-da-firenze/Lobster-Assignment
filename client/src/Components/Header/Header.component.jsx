@@ -16,7 +16,7 @@ import {
 import { RiMenu5Fill } from "react-icons/ri";
 import { IoMdClose } from "react-icons/io";
 import { Link } from "react-router-dom";
-import { UserContext } from "../../Context/UserContext";
+import { UserContext } from "../../Context/User.Context";
 import lobsterIcon from "../../assets/lobster-icon.svg";
 
 const Header = () => {

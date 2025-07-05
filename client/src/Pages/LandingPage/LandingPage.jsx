@@ -12,7 +12,8 @@ import {
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { UserContext } from "../../Context/UserContext";
+import { UserContext } from "../../Context/User.Context";
+
 // import Feature from "./Feature";
 import lobster from "../../assets/lobster-home.png";
 import Feature from "../../Components/Feature/Feature.component";
