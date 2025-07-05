@@ -1,6 +1,7 @@
 const Event = require("../models/Event");
 const Registration = require("../models/Registration");
 const User = require("../models/User");
+const redis = require("../utils/redisClient");
 
 const addEvent = async (req, res) => {
     try {
@@ -26,6 +27,9 @@ const addEvent = async (req, res) => {
             thumbnail,
         });
 
+        // Invalidate events cache
+        await redis.del("events:all");
+
         res.status(201).json({ message: "Event created successfully", event });
     } catch (error) {
         console.error("Error adding event:", error);
@@ -38,8 +42,20 @@ const addEvent = async (req, res) => {
 
 // Fetch all events
 const allEvents = async (req, res) => {
+    const cacheKey = "events:all";
+
     try {
+        const cachedEvents = await redis.get(cacheKey);
+        if (cachedEvents) {
+            console.log("✅ Served from Redis cache...");
+            return res.status(200).json(JSON.parse(cachedEvents));
+        }
+
         const events = await Event.findAll();
+
+        await redis.set(cacheKey, JSON.stringify(events), "EX", 300);
+
+        console.log("💾 Cached events in Redis...");
         res.status(200).json(events);
     } catch (error) {
         res.status(500).json({
@@ -52,11 +68,21 @@ const allEvents = async (req, res) => {
 // Fetch event by its id
 const getEventById = async (req, res) => {
     const eventId = req.params.id;
+    const cacheKey = `event:${eventId}`;
+
     try {
+        const cachedEvent = await redis.get(cacheKey);
+        if (cachedEvent) {
+            console.log(`✅ Served event ${eventId} from cache`);
+            return res.status(200).json(JSON.parse(cachedEvent));
+        }
+
         const event = await Event.findByPk(eventId);
         if (!event) {
             return res.status(404).json({ message: "Event not found" });
         }
+
+        await redis.set(cacheKey, JSON.stringify(event), "EX", 300); // Cache for 5 mins
         res.status(200).json(event);
     } catch (error) {
         res.status(500).json({
