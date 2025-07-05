@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useContext } from "react";
 import {
     Box,
     Text,
@@ -16,43 +15,19 @@ import {
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { RiSearch2Line } from "react-icons/ri";
+import { AllEventsContext } from "../../Context/AllEvents.Context";
 
 const MotionBox = motion(Box);
 
 const Events = () => {
-    const [events, setEvents] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [searchText, setSearchText] = useState("");
+    const { filteredEvents, loadingAllEvents, searchText, setSearchText } =
+        useContext(AllEventsContext);
 
-    useEffect(() => {
-        axios
-            .get(
-                "https://lobster-assignment-backend.onrender.com/api/v1/events/all",
-                {
-                    withCredentials: true,
-                }
-            )
-            .then((response) => {
-                setEvents(response.data);
-                setLoading(false);
-            })
-            .catch((error) => {
-                console.error("Error in fetching events ", error);
-                setLoading(false);
-            });
-    }, []);
-
-    // Funciton to set the search text on change of input
     const handleSearch = (event) => {
         setSearchText(event.target.value);
     };
 
-    // Filter events on the basis of name
-    const filteredEvents = events.filter((event) =>
-        event.name.toLowerCase().includes(searchText.toLowerCase())
-    );
-
-    if (loading) {
+    if (loadingAllEvents) {
         return (
             <Center minH="100vh">
                 <Spinner size="xl" />
@@ -66,10 +41,9 @@ const Events = () => {
                 Current Events
             </Heading>
             <InputGroup mb={5}>
-                <InputLeftElement
-                    pointerEvents="none"
-                    children={<RiSearch2Line />}
-                />
+                <InputLeftElement pointerEvents="none">
+                    <RiSearch2Line />
+                </InputLeftElement>
                 <Input
                     type="text"
                     placeholder="Search events by name"
