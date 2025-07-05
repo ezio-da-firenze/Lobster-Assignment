@@ -16,6 +16,8 @@ import axios from "axios";
 const URL = "https://lobster-assignment-backend.onrender.com/api/v1/events/add";
 
 const AddEvent = () => {
+    const toast = useToast();
+
     const [formData, setFormData] = useState({
         name: "",
         location: "",
@@ -23,6 +25,8 @@ const AddEvent = () => {
         time: "",
         category: "",
     });
+
+    const [thumbnail, setThumbnail] = useState(null);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -33,7 +37,7 @@ const AddEvent = () => {
     };
 
     const handleFileChange = (e) => {
-        setThumbnail(e.target.files[0]); // Only the first file
+        setThumbnail(e.target.files[0]);
     };
 
     const handleSubmit = async (e) => {
@@ -56,7 +60,7 @@ const AddEvent = () => {
             });
 
             console.log(response.data);
-            // Show success toast
+
             toast({
                 title: "Event Added",
                 description: "Event has been successfully added.",
@@ -115,7 +119,6 @@ const AddEvent = () => {
                             onChange={handleChange}
                         />
                     </FormControl>
-
                     <FormControl id="location">
                         <FormLabel>Location</FormLabel>
                         <Input
@@ -125,7 +128,6 @@ const AddEvent = () => {
                             onChange={handleChange}
                         />
                     </FormControl>
-
                     <FormControl id="description">
                         <FormLabel>Description</FormLabel>
                         <Textarea
@@ -134,7 +136,6 @@ const AddEvent = () => {
                             onChange={handleChange}
                         />
                     </FormControl>
-
                     <FormControl id="time" isRequired>
                         <FormLabel>Time</FormLabel>
                         <Input
@@ -144,7 +145,6 @@ const AddEvent = () => {
                             onChange={handleChange}
                         />
                     </FormControl>
-
                     <FormControl id="category" isRequired>
                         <FormLabel>Category</FormLabel>
                         <Select
@@ -157,7 +157,6 @@ const AddEvent = () => {
                             <option value="technical">Technical</option>
                         </Select>
                     </FormControl>
-
                     <FormControl id="thumbnail">
                         <FormLabel>Thumbnail Image</FormLabel>
                         <Input
@@ -166,7 +165,6 @@ const AddEvent = () => {
                             onChange={handleFileChange}
                         />
                     </FormControl>
-
                     <Button type="submit" colorScheme="blue">
                         Add Event
                     </Button>
