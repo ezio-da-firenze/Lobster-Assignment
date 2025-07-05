@@ -26,6 +26,10 @@ const Event = sequelize.define("Event", {
         type: DataTypes.DATE,
         allowNull: false,
     },
+    thumbnail: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
     category: {
         type: DataTypes.STRING,
         allowNull: false,
