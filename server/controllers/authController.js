@@ -9,7 +9,7 @@ const {
     UserLoginSchema,
 } = require("../utils/inputValidaiton");
 
-const registerUser = async (req, res) => {
+const registerUser = async (req, res) => {                              
     try {
         const {
             username,

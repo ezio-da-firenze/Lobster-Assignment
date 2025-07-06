@@ -28,7 +28,8 @@ const addEvent = async (req, res) => {
         });
 
         // Invalidate events cache
-        await redis.del("events:all");
+        const deleted = await redis.del("events:all");
+        console.log(`♻️ [CACHE INVALIDATED] events:all - ${deleted} key(s) removed`);
 
         res.status(201).json({ message: "Event created successfully", event });
     } catch (error) {
@@ -46,16 +47,17 @@ const allEvents = async (req, res) => {
 
     try {
         const cachedEvents = await redis.get(cacheKey);
+        
         if (cachedEvents) {
-            console.log("✅ Served from Redis cache...");
-            return res.status(200).json(JSON.parse(cachedEvents));
+            console.log(`✅ [CACHE HIT] Served events from Redis cache`);
+            return res.json(JSON.parse(cachedEvents));
         }
+        console.log(`❌ [CACHE MISS] Events not found in cache, fetching from database...`);
 
         const events = await Event.findAll();
 
         await redis.set(cacheKey, JSON.stringify(events), "EX", 300);
-
-        console.log("💾 Cached events in Redis...");
+        console.log(`💾 [CACHE SET] Events cached in Redis for 5 minutes`);
         res.status(200).json(events);
     } catch (error) {
         res.status(500).json({
@@ -82,7 +84,8 @@ const getEventById = async (req, res) => {
             return res.status(404).json({ message: "Event not found" });
         }
 
-        await redis.set(cacheKey, JSON.stringify(event), "EX", 300); // Cache for 5 mins
+        await redis.set(cacheKey, JSON.stringify(event), "EX", 300);
+        console.log(`💾 [CACHE SET] Event ${eventId} cached in Redis for 5 minutes`);
         res.status(200).json(event);
     } catch (error) {
         res.status(500).json({
