@@ -6,6 +6,7 @@
 
 For detailed documentation https://app.eraser.io/workspace/j02EOSVDs5ox5Hb0d6NW?origin=share
 
+___
 ## Screenshots
 ![Screenshot 2024-06-12 190540](https://github.com/ezio-da-firenze/Assignment/assets/126500974/5b814a09-8ec4-4ab6-880e-091b088fe8cd)
 
@@ -25,7 +26,18 @@ For detailed documentation https://app.eraser.io/workspace/j02EOSVDs5ox5Hb0d6NW?
 ![Screenshot 2024-06-12 190842](https://github.com/ezio-da-firenze/Assignment/assets/126500974/fa92cf0f-238a-4068-969a-cf220260c453)
 
 
+
 ![Screenshot 2024-06-12 190929](https://github.com/ezio-da-firenze/Assignment/assets/126500974/ff319d67-cd9b-4e9b-afe1-3eb7aab76c55)
 
 
 ![Screenshot 2024-06-12 191158](https://github.com/ezio-da-firenze/Assignment/assets/126500974/acd6aa52-7786-4341-af58-4d7a68976742)
+
+___
+
+### Response-time decrease after implementing Redis Caching
+
+**Before Redis**
+![Screenshot 2025-07-07 211751](https://github.com/user-attachments/assets/01849aa3-030c-4e5f-b0c1-b4f64d3ef9a1)
+
+**After Redis**
+![Screenshot 2025-07-07 212021](https://github.com/user-attachments/assets/b6328a34-4eda-4e07-938b-4e3f61fc0741)
