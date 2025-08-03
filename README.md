@@ -3,6 +3,8 @@
 -   Frontend built using React Js
 -   Backend using Node Js
 -   Database using MySQL
+-   Cloudinary for handling Images
+-   Basic Redis Caching included
 
 For detailed documentation https://app.eraser.io/workspace/j02EOSVDs5ox5Hb0d6NW?origin=share
 
