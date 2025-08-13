@@ -1,7 +1,6 @@
 const Event = require("../models/Event");
 const Registration = require("../models/Registration");
 const User = require("../models/User");
-const redis = require("../utils/redisClient");
 
 const addEvent = async (req, res) => {
     try {
@@ -27,10 +26,6 @@ const addEvent = async (req, res) => {
             thumbnail,
         });
 
-        // Invalidate events cache
-        const deleted = await redis.del("events:all");
-        console.log(`♻️ [CACHE INVALIDATED] events:all - ${deleted} key(s) removed`);
-
         res.status(201).json({ message: "Event created successfully", event });
     } catch (error) {
         console.error("Error adding event:", error);
@@ -43,21 +38,8 @@ const addEvent = async (req, res) => {
 
 // Fetch all events
 const allEvents = async (req, res) => {
-    const cacheKey = "events:all";
-
     try {
-        const cachedEvents = await redis.get(cacheKey);
-        
-        if (cachedEvents) {
-            console.log(`✅ [CACHE HIT] Served events from Redis cache`);
-            return res.json(JSON.parse(cachedEvents));
-        }
-        console.log(`❌ [CACHE MISS] Events not found in cache, fetching from database...`);
-
         const events = await Event.findAll();
-
-        await redis.set(cacheKey, JSON.stringify(events), "EX", 300);
-        console.log(`💾 [CACHE SET] Events cached in Redis for 5 minutes`);
         res.status(200).json(events);
     } catch (error) {
         res.status(500).json({
@@ -70,22 +52,12 @@ const allEvents = async (req, res) => {
 // Fetch event by its id
 const getEventById = async (req, res) => {
     const eventId = req.params.id;
-    const cacheKey = `event:${eventId}`;
 
     try {
-        const cachedEvent = await redis.get(cacheKey);
-        if (cachedEvent) {
-            console.log(`✅ Served event ${eventId} from cache`);
-            return res.status(200).json(JSON.parse(cachedEvent));
-        }
-
         const event = await Event.findByPk(eventId);
         if (!event) {
             return res.status(404).json({ message: "Event not found" });
         }
-
-        await redis.set(cacheKey, JSON.stringify(event), "EX", 300);
-        console.log(`💾 [CACHE SET] Event ${eventId} cached in Redis for 5 minutes`);
         res.status(200).json(event);
     } catch (error) {
         res.status(500).json({
@@ -95,13 +67,11 @@ const getEventById = async (req, res) => {
     }
 };
 
-// Fetch events that user has regietered for
+// Fetch events that user has registered for
 const getMyEvents = async (req, res) => {
     try {
-        // req.user is set in the middleware
         const userId = req.user.id;
 
-        // Fetch all events in the registrations table for the user: userId
         const registrations = await Registration.findAll({
             where: { userId },
             attributes: ["eventId"],
